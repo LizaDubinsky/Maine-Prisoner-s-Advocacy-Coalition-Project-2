@@ -1,0 +1,167 @@
+---
+title: "Dieter_File"
+author: "Dieter Villegas"
+date: "5/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Store string containing all required packages
+my_packages <- c('bipartite', 'RColorBrewer')
+
+```
+
+Figure out which of these packages is already installed
+``` {r}
+# Store all installed packages
+ya_installed <- library()$results[,1]
+
+# Check whether required packages are already installed and grab only those that still need installation
+need_install<-my_packages[!(my_packages %in% ya_installed)]
+
+#install required packages
+lapply({need_install}, install.packages, character.only = TRUE)
+
+```
+
+``` {r}
+# Store all installed packages
+ya_loaded <- (.packages())
+
+# Check whether required packages are already installed and grab only those that still need installation
+need_load<-my_packages[!(my_packages %in% ya_loaded)]
+
+# Load required packages
+lapply(need_load, require, character.only = TRUE)
+```
+```{r}
+#install.packages("tidyverse")
+#devtools::install_github("rstudio-education/dsbox")
+#library(tidyverse)
+#library(dsbox)
+```
+
+```{r}
+incar <- read.csv("incarceration_trends.csv")
+
+```
+
+
+```{r}
+library(tidyverse)
+library(dsbox)
+by_state<-incar$state
+maine_data <- by_state =="ME"
+maine_df <- incar[maine_data,]
+
+
+```
+
+```{r}
+#install.packages("xaringanthemer")
+library(tidyverse)
+library(tidymodels)
+#library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+#install.packages("maps")
+#install.packages("corrplot")
+
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+
+library(dplyr)
+#library(dsbox)
+library(skimr)
+library(robotstxt)
+library(tidyr) 
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(kableExtra) ## Table output
+#install.packages("geojsonio")
+#install.packages("rgdal")
+#install.packages("leaflet")
+library(leaflet)
+#install.packages("geojsonio")
+library(geojsonio)
+library(sf)
+library(leaflet)
+#install.packages("sf")
+library(RColorBrewer)
+```
+
+```{r}
+states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
+        , what = "sp")
+class(states)
+
+library(readr)
+states_all <- read_csv("../data/states_all.csv")
+```
+
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+states_all <- states_all %>%
+  mutate(name = str_to_lower(str_replace_all(STATE, pattern = "_", replacement = " ")))
+
+states <- st_as_sf(states)
+states <- states %>%
+  mutate(name = str_to_lower(name))
+  
+state_total_exp <- states_all %>%
+  left_join(states, by = "name") %>%
+  st_as_sf()
+
+state_total_exp <- state_total_exp %>%
+  filter(YEAR == 2015) %>%
+  mutate(total_exp_per_student = TOTAL_EXPENDITURE/GRADES_ALL_G)
+  
+#this is for changing color 
+bins <- c(0, 2.5, 5, 7.5, 10, 12.5, 15, 20, 25, 30)
+pal <- colorBin("Spectral", domain = state_total_exp$total_exp_per_student, bins = bins)
+
+```
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+labels <- sprintf("<strong>%s</strong><br/>%g proportion expenditure/student",
+                  state_total_exp$name, state_total_exp$total_exp_per_student) %>% lapply(htmltools::HTML)
+
+```
+
+```{r}
+state_avg_scores%>%
+  group_by(STATE) %>%
+  mutate(median_score_per_student = median(state_avg_scores_students, na.rm = TRUE)) %>%
+  filter(YEAR == 2015) %>%
+leaflet() %>%
+  addTiles()%>%
+  setView(lng = -80,
+          lat = 34.5,
+          zoom = 4) %>%
+  addPolygons(fillColor = ~pal(median_score_per_student),
+              fillOpacity = 1,
+              color = "blue",
+              opacity = 1,
+              weight = 1,
+              highlight = highlightOptions(
+                weight = 3,
+                color = "blue",
+                fillOpacity = .2,
+                bringToFront = TRUE),
+              label = labels) %>%
+  addLegend(
+    position = "topright",
+    pal = pal,
+    values = ~median_score_per_student,
+    title = "Median yearly Average Math Score per state",
+    opacity = 1)
+
+```
+
