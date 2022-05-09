@@ -60,42 +60,74 @@ maine_df <- incar[maine_data,]
 ```
 
 ```{r}
-#install.packages("xaringanthemer")
-library(tidyverse)
-library(tidymodels)
-#library(palmerpenguins)
-library(knitr)
-library(xaringanthemer)
-#install.packages("maps")
-#install.packages("corrplot")
+#Importing state/County JSON containing fip and geometry of the counties
+all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json", what= "sp")
+#AK<-geojsonio::geojson_read(x = "https://raw.githubusercontent.com/billcccheng/us-county-boundary-api/master/states/AK.json", what = "sp")
+by_year<-incar$year
+maine_data <- by_year =="1970"
+year_1970 <- incar[maine_data,]
 
-library(maps)
-library(ggplot2)
-library(tidyverse)
-library(corrplot)
-
-library(dplyr)
-#library(dsbox)
-library(skimr)
-library(robotstxt)
-library(tidyr) 
-library(leaflet) ## For leaflet interactive maps
-library(sf) ## For spatial data
-library(RColorBrewer) ## For colour palettes
-library(htmltools) ## For html
-library(leafsync) ## For placing plots side by side
-library(kableExtra) ## Table output
-#install.packages("geojsonio")
-#install.packages("rgdal")
-#install.packages("leaflet")
-library(leaflet)
-#install.packages("geojsonio")
-library(geojsonio)
-library(sf)
-library(leaflet)
-#install.packages("sf")
-library(RColorBrewer)
 ```
+
+
+
+
+```{r}
+year_1970<- year_1970 %>%
+  mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
+
+all_counties <- st_as_sf(all_counties)
+all_counties <- all_counties %>%
+  mutate(NAME = str_to_lower(NAME))
+
+joint_info_map <- year_1970 %>%
+  left_join(all_counties, by = c("county_name" = "NAME")) %>%
+  st_as_sf()
+
+
+joint_info_map  <- joint_info_map  %>%
+  #filter(total_pop) %>%
+  mutate(total_pop = total_pop)
+```
+
+```{r}
+labels <- sprintf("<strong>%s</strong><br/>%g total population",
+                 joint_info_map$county_name, joint_info_map$total_pop) %>% lapply(htmltools::HTML)
+```
+
+```{r}
+joint_info_map%>%
+  #group_by(county_name) %>%
+ # mutate(median_score_per_student = median(state_avg_scores_students, na.rm = TRUE)) %>%
+  #filter(YEAR == 2015) %>%
+leaflet() %>%
+  addTiles()%>%
+  setView(lng = -80,
+          lat = 34.5,
+          zoom = 4) %>%
+  addPolygons(#fillColor = ~pal(median_score_per_student),
+              fillOpacity = 0.1,
+              color = "blue",
+              opacity = 1,
+              weight = 1,
+              highlight = highlightOptions(
+                weight = 3,
+                color = "blue",
+                fillOpacity = .2,
+                bringToFront = TRUE),
+              label = labels) %>%
+  addLegend(
+    position = "topright",
+    pal = pal,
+    values = ~total_pop,
+    title = "Total pop by county",
+    opacity = 1)
+```
+
+
+
+
+
 
 ```{r}
 states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
@@ -103,8 +135,10 @@ states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/Publica
 class(states)
 
 library(readr)
-states_all <- read_csv("../data/states_all.csv")
+
+states_all <- read_csv("https://raw.githubusercontent.com/DCS-210/project-kathleen-thomas-meg-dieter/main/data/states_all.csv")
 ```
+
 
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
@@ -163,5 +197,102 @@ leaflet() %>%
     title = "Median yearly Average Math Score per state",
     opacity = 1)
 
+```
+
+
+```{r}
+
+library(sp)
+library(rgeos)
+
+library(rgdal)
+library(maptools)
+library(dplyr)
+library(leaflet)
+library(scales)
+### Begin data prep
+# Grab air/water quality data from the EPA
+url = "https://data.cdc.gov/api/views/cjae-szjv/rows.csv?accessType=DOWNLOAD"
+dat <- read.csv(url, stringsAsFactors = FALSE)
+# Colnames tolower
+names(dat) <- tolower(names(dat))
+dat$countyname <- tolower(dat$countyname)
+# Wide data set, subset only what we need.
+county_dat <- subset(dat, measureid == "296", 
+                     select = c("reportyear","countyfips","statename", "countyname", "value", "unitname")) %>%
+    subset(reportyear==2011, select = c("countyfips", "value"))
+# Rename columns to make for a clean df merge later.
+colnames(county_dat) <- c("GEOID", "airqlty")
+# Have to add leading zeos to any FIPS code that's less than 5 digits long to get a good match.
+# I'm cheating by using C code. sprintf will work as well.
+county_dat$GEOID <- formatC(county_dat$GEOID, width = 5, format = "d", flag = "0")
+### End data prep
+
+# Download county shape file from Tiger.
+# https://www.census.gov/geo/maps-data/data/cbf/cbf_counties.html
+us.map <- readOGR(dsn = ".", layer = "cb_2013_us_county_20m", stringsAsFactors = FALSE)
+
+# Remove Alaska(2), Hawaii(15), Puerto Rico (72), Guam (66), Virgin Islands (78), American Samoa (60)
+#  Mariana Islands (69), Micronesia (64), Marshall Islands (68), Palau (70), Minor Islands (74)
+us.map <- us.map[!us.map$STATEFP %in% c("02", "15", "72", "66", "78", "60", "69",
+                                        "64", "68", "70", "74"),]
+# Make sure other outling islands are removed.
+us.map <- us.map[!us.map$STATEFP %in% c("81", "84", "86", "87", "89", "71", "76",
+                                        "95", "79"),]
+# Merge spatial df with downloade ddata.
+leafmap <- merge(us.map, county_dat, by=c("GEOID"))
+
+# Format popup data for leaflet map.
+popup_dat <- paste0("<strong>County: </strong>", 
+                    leafmap$NAME, 
+                    "<br><strong>Value: </strong>", 
+                    leafmap$airqlty)
+
+pal <- colorQuantile("YlOrRd", NULL, n = 20)
+# Render final map in leaflet.
+leaflet(data = leafmap) %>% addTiles() %>%
+    addPolygons(fillColor = ~pal(airqlty), 
+                fillOpacity = 0.8, 
+                color = "#BDBDC3", 
+                weight = 1,
+                popup = popup_dat)
+```
+
+```{r}
+#install.packages("xaringanthemer")
+library(tidyverse)
+library(tidymodels)
+#library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+#install.packages("maps")
+#install.packages("corrplot")
+
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+
+library(dplyr)
+#library(dsbox)
+library(skimr)
+library(robotstxt)
+library(tidyr) 
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(kableExtra) ## Table output
+#install.packages("geojsonio")
+#install.packages("rgdal")
+#install.packages("leaflet")
+library(leaflet)
+#install.packages("geojsonio")
+library(geojsonio)
+library(sf)
+library(leaflet)
+#install.packages("sf")
+library(RColorBrewer)
 ```
 
