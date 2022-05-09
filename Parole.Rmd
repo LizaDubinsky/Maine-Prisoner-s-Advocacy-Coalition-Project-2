@@ -1,0 +1,54 @@
+---
+title: "Parole"
+output: html_document
+date: '2022-05-08'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+
+#installing necessary packages
+library(readxl)
+Parole_Data_1998_2008_ <- read_excel("Parole Data (1998-2008).xlsx")
+library(ggplot2)
+library(skimr)
+library(tidyverse)
+library(leaflet)
+library(knitr)
+install.packages("naniar")
+library(naniar)
+
+#put original df into a new one, in case we make changes
+new_parole_df <- Parole_Data_1998_2008_
+
+#made column name shorter
+colnames(new_parole_df)[3] <- "num_parole_per_capita"
+
+#making the N/A as NAs in R 
+new_parole_df <- new_parole_df %>%
+  mutate(num_parole_per_capita = na_if(num_parole_per_capita, "N/A"))
+
+#comparison states
+cs <- c("Connecticut", "Connecticut (es)", "New Hampshire", "New Hampshire (es)", "Vermont", "Vermont (es)", "Maine", "Maine (es)")
+
+
+cs_new_parole_df <- new_parole_df %>%
+  filter(State %in% cs) 
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
