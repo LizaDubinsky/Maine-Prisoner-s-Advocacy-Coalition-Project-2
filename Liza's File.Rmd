@@ -36,4 +36,96 @@ maine_data %>%
   labs(x = "Year", x = "Total Jail Population")
 ```
 
+```{r}
+parole_data_1 <- read.csv("parole_data_LD.csv")
+parole_data_1 = subset(parole_data_1, select = -c(X, X.1, X.2, X.3, X.4))
+parole_data_1 <- parole_data_1[-c(562:600), ]
+write.csv(x = parole_data_1, file = "parole_LD", row.names = FALSE)
+read_parole <- read.csv("parole_LD")
+parole_years_1 <- clean_test
+colnames(parole_years_1) <- c("year", "state_abbreviation", "state", "number_on_parole_per_100000_us_adult_residents")
+```
 
+```{r}
+
+#installing necessary packages
+library(readxl)
+Parole_Data_1998_2008_ <- read_excel("Parole Data (1998-2008).xlsx")
+library(ggplot2)
+library(skimr)
+library(tidyverse)
+library(leaflet)
+library(knitr)
+install.packages("naniar")
+library(naniar)
+
+#put original df into a new one, in case we make changes
+new_parole_df <- Parole_Data_1998_2008_
+
+#made column name shorter
+colnames(new_parole_df)[3] <- "num_parole_per_capita"
+
+#making the N/A as NAs in R 
+new_parole_df <- new_parole_df %>%
+  mutate(num_parole_per_capita = na_if(num_parole_per_capita, "N/A"))
+
+#comparison states
+cs <- c("Connecticut", "Connecticut (es)", "New Hampshire", "New Hampshire (es)", "Vermont", "Vermont (es)", "Maine", "Maine (es)")
+
+
+cs_new_parole_df <- new_parole_df %>%
+  filter(State %in% cs) 
+
+#creating a State abbreviations column to standardize data
+install.packages("state")
+library(states)
+
+#creating new column for state abbreviations
+
+new_parole_df <- new_parole_df %>%
+  mutate(new_state = case_when(
+    new_parole_df$State == "Alabama (es)" ~ "Alabama", 
+    new_parole_df$State == "Arizona (es)" ~ "Arizona", 
+    new_parole_df$State == "Arkansas (es)" ~ "Arkansas",
+    new_parole_df$State == "Colorado (es)" ~ "Colorado", 
+    new_parole_df$State == "District of Columbia (es)" ~ "District of Columbia", 
+    new_parole_df$State == "Florida (es)" ~ "Florida", 
+    new_parole_df$State == "Illinois (es)" ~ "Illinois", 
+    new_parole_df$State == "Iowa (es)" ~ "Iowa", 
+    new_parole_df$State == "Kentucky (es)" ~ "Kentucky", 
+    new_parole_df$State == "Massachusetts (es)" ~ "Massachusetts", 
+    new_parole_df$State == "Mississippi (nfy)" ~ "Mississippi", 
+    new_parole_df$State == "Missouri (es)" ~ "Missouri", 
+    new_parole_df$State == "New Hampshire (es)" ~ "New Hampshire", 
+    new_parole_df$State == "New Mexico (es)" ~ "New Mexico", 
+    new_parole_df$State == "North Carolina (es)" ~ "North Carolina", 
+    new_parole_df$State == "Oklahoma (es)" ~ "Oklahoma",
+    new_parole_df$State == "South Dakota (es)" ~ "South Dakota", 
+    new_parole_df$State == "Texas (es)" ~ "Texas", 
+    new_parole_df$State == "Vermont (es)" ~ "Vermont",
+    new_parole_df$State == "Washington (es)" ~ "Washington", 
+    new_parole_df$State == "Wisconsin (nfy)" ~ "Wisconsin", 
+    TRUE ~ new_parole_df$State
+  ))
+
+new_parole_df <- new_parole_df %>%
+  mutate(State.Abbreviation = state.abb[match(new_parole_df$new_state,state.name)]) %>%
+  mutate(State.Abbreviation = case_when(
+    new_state == "District of Columbia" ~ "DC", 
+    TRUE ~ State.Abbreviation
+  )) 
+
+```
+
+```{r}
+parole_years_2 <- subset(new_parole_df, select = c("Year", "State.Abbreviation", "new_state", "num_parole_per_capita"))
+colnames(parole_years_2) <- c("year", "state_abbreviation", "state", "number_on_parole_per_100000_us_adult_residents")
+```
+
+```{r}
+all_parole_years <- rbind(parole_years_1, parole_years_2)
+write.csv(x = all_parole_years, file = "all_parole_years.csv", row.names = FALSE)
+final_parole_data <- read.csv("all_parole_years.csv")
+
+
+```
