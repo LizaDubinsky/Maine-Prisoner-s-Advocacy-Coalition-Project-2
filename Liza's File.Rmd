@@ -42,6 +42,7 @@ parole_data_1 = subset(parole_data_1, select = -c(X, X.1, X.2, X.3, X.4))
 parole_data_1 <- parole_data_1[-c(562:600), ]
 write.csv(x = parole_data_1, file = "parole_LD", row.names = FALSE)
 read_parole <- read.csv("parole_LD")
+clean_test <- clean_test <- janitor::clean_names(read_parole)
 parole_years_1 <- clean_test
 colnames(parole_years_1) <- c("year", "state_abbreviation", "state", "number_on_parole_per_100000_us_adult_residents")
 ```
@@ -126,6 +127,5 @@ colnames(parole_years_2) <- c("year", "state_abbreviation", "state", "number_on_
 all_parole_years <- rbind(parole_years_1, parole_years_2)
 write.csv(x = all_parole_years, file = "all_parole_years.csv", row.names = FALSE)
 final_parole_data <- read.csv("all_parole_years.csv")
-
 
 ```
