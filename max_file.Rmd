@@ -156,13 +156,13 @@ leaflet(data = state_parole) %>%
                 color = "blue",
                 fillOpacity = .2,
                 bringToFront = TRUE),
-              label = labels) #%>%
-  # addLegend(
-  #   position = "topright",
-  #   pal = pal,
-  #   values = ~number_on_parole_per_100000_us_adult_residents,
-  #   title = "Number of U.S. Adult Residents on Parole per 100000.",
-  #   opacity = 1)
+              label = labels) %>%
+  addLegend(
+  position = "topright",
+  pal = pal,
+  values = ~number_on_parole_per_100000_us_adult_residents,
+  title = "Number of U.S. Adult Residents on Parole per 100000.",
+  opacity = 1)
 
 ```
 
