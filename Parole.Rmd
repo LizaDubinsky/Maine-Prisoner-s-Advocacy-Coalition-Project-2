@@ -17,6 +17,7 @@ When you click the **Knit** button a document will be generated that includes bo
 ```{r}
 
 #installing necessary packages
+library(readr)
 library(readxl)
 Parole_Data_1998_2008_ <- read_excel("Parole Data (1998-2008).xlsx")
 library(ggplot2)
@@ -45,7 +46,7 @@ cs_new_parole_df <- new_parole_df %>%
   filter(State %in% cs) 
 
 #creating a State abbreviations column to standardize data
-install.packages("state")
+install.packages("states")
 library(states)
 
 #creating new column for state abbreviations
@@ -83,6 +84,68 @@ new_parole_df <- new_parole_df %>%
     TRUE ~ State.Abbreviation
   )) 
 
+
+
+
+```
+
+
+```{r}
+
+#downloading package and US census states data
+library(leaflet)
+library(leaflet.providers)
+
+install.packages("sf")
+library(sf)
+
+all_parole_years <- read_csv("all_parole_years.csv")
+us_states_spatial <- st_read(dsn = "/cloud/project/cb_2021_us_state_500k.shp")
+
+
+
+#Join data with parole years dataframe
+parole_spatial_data <- all_parole_years %>%
+  left_join(us_states_spatial, by = c("state" = "NAME")) %>%
+  st_as_sf() %>%
+  st_transform("+init=epsg:4326")
+
+
+#creating bins for our leaflet map
+#bins <- seq(from = 0, to = 100, by = 12.5)
+#pal_perc <- colorBin("OrRd", domain = total_district_complaints_spatial , bins = bins)
+#https://laurielbaker.github.io/DSCA_leaflet_mapping_in_r/slides/leaflet_slides3.html#58
+ 
+m <- leaflet(parole_spatial_data) %>%
+# Now add tiles to it
+  addTiles() %>%
+# Setting the middle of where the map should be and the zoom level
+  setView(-98.042268, 39.178375,  zoom = 4.25) %>%
+  addProviderTiles(providers$CartoDB.Positron)
+
+
+m <- m %>%
+  addPolygons(
+    fillOpacity = 1,
+    color = "black",
+    opacity = 0.7,
+    weight = 1)
+
+#fillColor = ~pal_perc(total_district_complaints_spatial$`Black%`)
+      
+#m <- m %>%
+#  addLegend(
+ #   position = "topright",
+  #  pal = pal_perc,
+   # title = "Percent",
+    #values = ~parole_spatial_data$number_on_parole_per_100000_us_adult_residents,
+    #opacity = 1)
+
+# values = ~total_district_complaints_spatial$`Black%`
+
+#m
+
+```
 
 
 
