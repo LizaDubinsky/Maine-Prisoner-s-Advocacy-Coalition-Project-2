@@ -70,7 +70,7 @@ states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/Publica
 class(states)
 
 library(readr)
-states_all <- read.csv("all_parole_years.csv")
+parole_df <- read.csv("all_parole_years.csv")
 
 states <- st_as_sf(states)
 states <- states %>%
@@ -104,7 +104,7 @@ ui <- fluidPage(
         sidebarPanel(
             sliderInput(inputId = "year",
                         label = "Year:",
-                        min = lubridate::ymd("19700101"),
+                        min = lubridate::ymd("19950101"),
                         max = lubridate::ymd("20160101"),
                         value = lubridate::ymd("20000101"),
                         step = 1,
@@ -124,14 +124,14 @@ server <- function(input, output) {
     output$mymap <- renderLeaflet({
       #Set YEAR with Slider
       state_parole <- state_parole %>%
-        filter(year=input$year)
+        filter(year == input$year)
       #Leaflet
       leaflet(data = state_parole) %>%
         addTiles()%>%
         setView(lng = -80,
                 lat = 34.5,
                 zoom = 4) %>%
-        addPolygons(fillColor = ~pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+        addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
                     fillOpacity = 1,
                     color = "blue",
                     opacity = 0.1,
