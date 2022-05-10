@@ -1,20 +1,14 @@
----
-title: "Max_File"
-author: "Max Lauster"
-date: "5/3/2022"
-output: html_document
----
+library(shiny)
+library(leaflet)
+library(dplyr)
+library(lubridate)
 
-```{r setup, include=FALSE}
+#Install Packages for Leaflet %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 knitr::opts_chunk$set(echo = TRUE)
 
 # Store string containing all required packages
 my_packages <- c('bipartite', 'RColorBrewer')
-
-```
-
-Figure out which of these packages is already installed
-``` {r}
 # Store all installed packages
 ya_installed <- library()$results[,1]
 
@@ -23,10 +17,6 @@ need_install<-my_packages[!(my_packages %in% ya_installed)]
 
 #install required packages
 lapply({need_install}, install.packages, character.only = TRUE)
-
-```
-
-``` {r}
 # Store all installed packages
 ya_loaded <- (.packages())
 
@@ -35,29 +25,7 @@ need_load<-my_packages[!(my_packages %in% ya_loaded)]
 
 # Load required packages
 lapply(need_load, require, character.only = TRUE)
-```
-```{r}
-#install.packages("tidyverse")
-#devtools::install_github("rstudio-education/dsbox")
-#library(tidyverse)
-#library(dsbox)
-```
 
-```{r}
-parole_df <- read.csv("all_parole_years.csv")
-
-```
-
-
-```{r}
-library(tidyverse)
-library(dsbox)
-by_state<-parole_df$state
-
-
-```
-
-```{r}
 #install.packages("xaringanthemer")
 library(tidyverse)
 library(tidymodels)
@@ -93,21 +61,16 @@ library(sf)
 library(leaflet)
 #install.packages("sf")
 library(RColorBrewer)
-```
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-```{r}
+
+#READ IN JSON FOR STATE DATA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
-        , what = "sp")
+                                  , what = "sp")
 class(states)
 
 library(readr)
-states_all <- read.csv("all_parole_years.csv")
-```
-
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-#states_all <- states_all %>%
-  #mutate(name = str_to_lower(str_replace_all(STATE, pattern = "_", replacement = " ")))
+parole_df <- read.csv("all_parole_years.csv")
 
 states <- st_as_sf(states)
 states <- states %>%
@@ -115,54 +78,81 @@ states <- states %>%
 
 parole_df <- parole_df %>%
   mutate(state = str_to_lower(state))
-  
+
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
 
 state_parole <- state_parole %>%
   filter(year=1995)
-  #mutate(total_exp_per_student = TOTAL_EXPENDITURE/GRADES_ALL_G)
-  
+
 #this is for changing color 
 bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
 pal <- colorBin("Spectral", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
 
-```
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
 labels <- sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                   state_parole$state, state_parole$number_on_parole_per_100000_us_adult_residents) %>% lapply(htmltools::HTML)
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Define UI for application that draws a histogram
+ui <- fluidPage(
 
-```
+    # Application title
+    titlePanel("Maine Prisoner Advocacy Coalition"),
 
-```{r}
-#state_avg_scores%>%
-  #group_by(STATE) %>%
- # mutate(median_score_per_student = median(state_avg_scores_students, na.rm = TRUE)) %>%
-  #filter(YEAR == 2015) %>%
-leaflet(data = state_parole) %>%
-  addTiles()%>%
-  setView(lng = -80,
-          lat = 34.5,
-          zoom = 4) %>%
-  addPolygons(fillColor = ~pal(state_parole$number_on_parole_per_100000_us_adult_residents),
-              fillOpacity = 1,
-              color = "blue",
-              opacity = 0.1,
-              weight = 1,
-              highlight = highlightOptions(
-                weight = 3,
-                color = "blue",
-                fillOpacity = .2,
-                bringToFront = TRUE),
-              label = labels) %>%
-  addLegend(
-  position = "topright",
-  pal = pal,
-  values = ~number_on_parole_per_100000_us_adult_residents,
-  title = "Number of U.S. Adult Residents on Parole per 100000.",
-  opacity = 1)
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput(inputId = "year",
+                        label = "Year:",
+                        min = lubridate::ymd("19950101"),
+                        max = lubridate::ymd("20160101"),
+                        value = lubridate::ymd("20000101"),
+                        step = 1,
+                        timeFormat = "%Y")
+        ),
 
-```
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("mymap")
+        )
+    )
+)
 
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$mymap <- renderLeaflet({
+      #Set YEAR with Slider
+      state_parole <- state_parole %>%
+        filter(year == input$year)
+      #Leaflet
+      leaflet(data = state_parole) %>%
+        addTiles()%>%
+        setView(lng = -80,
+                lat = 34.5,
+                zoom = 4) %>%
+        addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+                    fillOpacity = 1,
+                    color = "blue",
+                    opacity = 0.1,
+                    weight = 1,
+                    highlight = highlightOptions(
+                      weight = 3,
+                      color = "blue",
+                      fillOpacity = .2,
+                      bringToFront = TRUE),
+                    label = labels) %>%
+        addLegend(
+          position = "topright",
+          pal = pal,
+          values = ~number_on_parole_per_100000_us_adult_residents,
+          title = "Number of U.S. Adult Residents on Parole per 100000.",
+          opacity = 1)
+       
+        
+        
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
