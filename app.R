@@ -62,8 +62,6 @@ library(leaflet)
 #install.packages("sf")
 library(RColorBrewer)
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 #READ IN JSON FOR STATE DATA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
                                   , what = "sp")
@@ -82,6 +80,8 @@ parole_df <- parole_df %>%
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
+
+
 
 
 #this is for changing color 
@@ -120,17 +120,19 @@ ui <- fluidPage(
 server <- function(input, output) {
 
     output$mymap <- renderLeaflet({
+      
+      
       #Set YEAR with Slider
       reactive({
       state_parole <- state_parole %>%
         filter(year == year(input$year))})
       #Leaflet
-      leaflet(data = state_parole()) %>%
+      leaflet(data = state_parole) %>%
         addTiles() %>%
         setView(lng = -80,
                 lat = 34.5,
                 zoom = 4) %>%
-        addPolygons(fillColor = ~ pal(state_parole()$number_on_parole_per_100000_us_adult_residents),
+        addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
                     fillOpacity = 1,
                     color = "blue",
                     opacity = 0.1,
