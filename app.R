@@ -81,9 +81,6 @@ state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
 
-state_parole <- state_parole %>%
-  mutate(state = str_to_title(state))
-
 
 
 
@@ -123,49 +120,49 @@ state_map<-leaflet(data = state_parole) %>%
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Maine Prisoner Advocacy Coalition"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput(inputId = "year",
-                        label = "Year:",
-                        min = lubridate::ymd("19850101"),
-                        max = lubridate::ymd("20160101"),
-                        value = lubridate::ymd("20000101"),
-                        step = 1,
-                        timeFormat = "%Y")
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           leafletOutput("mymap")
-        )
+  
+  # Application title
+  titlePanel("Maine Prisoner Advocacy Coalition"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "year",
+                  label = "Year:",
+                  min = lubridate::ymd("19850101"),
+                  max = lubridate::ymd("20160101"),
+                  value = lubridate::ymd("20000101"),
+                  step = 1,
+                  timeFormat = "%Y")
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      leafletOutput("mymap")
     )
+  )
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-
+  
   #Set YEAR with Slider
   state_parole_year <- reactive({
     state_parole %>%
-    filter(year == year(input$year))})
+      filter(year == year(input$year))})
   
-    output$mymap <- renderLeaflet({
-      state_map%>%
-      leaflet(data = state_parole_year())
+  output$mymap <- renderLeaflet({
+    state_map%>%
+      data = state_parole_year()
       
       
-     
-     
-       
-        
-        
-    })
+      
+      
+      
+      
+      
+  })
 }
 
 # Run the application 
