@@ -70,7 +70,7 @@ states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/Publica
 class(states)
 
 library(readr)
-states_all <- read.csv("all_parole_years.csv")
+parole_df <- read.csv("all_parole_years.csv")
 
 states <- st_as_sf(states)
 states <- states %>%
