@@ -102,7 +102,7 @@ ui <- fluidPage(
         sidebarPanel(
             sliderInput(inputId = "year",
                         label = "Year:",
-                        min = lubridate::ymd("1970101"),
+                        min = lubridate::ymd("19850101"),
                         max = lubridate::ymd("20160101"),
                         value = lubridate::ymd("20000101"),
                         step = 1,
