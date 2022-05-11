@@ -1,6 +1,9 @@
 ---
 title: "Parole"
-output: html_document
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
 date: '2022-05-08'
 ---
 
