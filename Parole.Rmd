@@ -96,8 +96,9 @@ new_parole_df <- new_parole_df %>%
 library(leaflet)
 library(leaflet.providers)
 
-install.packages("sf")
+#install.packages("sf")
 library(sf)
+library(readr)
 
 all_parole_years <- read_csv("all_parole_years.csv")
 us_states_spatial <- st_read(dsn = "/cloud/project/cb_2021_us_state_500k.shp")
@@ -112,8 +113,8 @@ parole_spatial_data <- all_parole_years %>%
 
 
 #creating bins for our leaflet map
-#bins <- seq(from = 0, to = 100, by = 12.5)
-#pal_perc <- colorBin("OrRd", domain = total_district_complaints_spatial , bins = bins)
+bins <- seq(from = 0, to = 118000, by = 13150)
+pal_perc <- colorBin("OrRd", domain = parole_spatial_data, bins = bins)
 #https://laurielbaker.github.io/DSCA_leaflet_mapping_in_r/slides/leaflet_slides3.html#58
  
 m <- leaflet(parole_spatial_data) %>%
@@ -129,21 +130,21 @@ m <- m %>%
     fillOpacity = 1,
     color = "black",
     opacity = 0.7,
+    fillColor = ~pal_perc(parole_spatial_data$number_on_parole_per_100000_us_adult_residents),
     weight = 1)
 
-#fillColor = ~pal_perc(total_district_complaints_spatial$`Black%`)
+
       
-#m <- m %>%
-#  addLegend(
- #   position = "topright",
-  #  pal = pal_perc,
-   # title = "Percent",
-    #values = ~parole_spatial_data$number_on_parole_per_100000_us_adult_residents,
-    #opacity = 1)
+m <- m %>%
+  addLegend(
+    position = "topright",
+    pal = pal_perc,
+    title = "Percent",
+    values = ~parole_spatial_data$number_on_parole_per_100000_us_adult_residents,
+    opacity = 1)
 
-# values = ~total_district_complaints_spatial$`Black%`
 
-#m
+m
 
 ```
 
