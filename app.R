@@ -83,8 +83,6 @@ state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
 
-state_parole <- state_parole %>%
-  filter(year=1995)
 
 #this is for changing color 
 bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
@@ -104,7 +102,7 @@ ui <- fluidPage(
         sidebarPanel(
             sliderInput(inputId = "year",
                         label = "Year:",
-                        min = lubridate::ymd("19950101"),
+                        min = lubridate::ymd("1970101"),
                         max = lubridate::ymd("20160101"),
                         value = lubridate::ymd("20000101"),
                         step = 1,
@@ -123,15 +121,16 @@ server <- function(input, output) {
 
     output$mymap <- renderLeaflet({
       #Set YEAR with Slider
+      reactive({
       state_parole <- state_parole %>%
-        filter(year == input$year)
+        filter(year == year(input$year))})
       #Leaflet
-      leaflet(data = state_parole) %>%
-        addTiles()%>%
+      leaflet(data = state_parole()) %>%
+        addTiles() %>%
         setView(lng = -80,
                 lat = 34.5,
                 zoom = 4) %>%
-        addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+        addPolygons(fillColor = ~ pal(state_parole()$number_on_parole_per_100000_us_adult_residents),
                     fillOpacity = 1,
                     color = "blue",
                     opacity = 0.1,
