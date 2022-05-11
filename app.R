@@ -81,6 +81,9 @@ state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
 
+state_parole <- state_parole %>%
+  mutate(state = str_to_title(state))
+
 
 
 
