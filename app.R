@@ -85,7 +85,7 @@ state_parole <- parole_df %>%
 
 
 #this is for changing color 
-bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
+bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 2000)
 pal <- colorBin("Spectral", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
 
 labels <- sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
@@ -111,7 +111,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("mymap")
+           leafletOutput("mymap")
         )
     )
 )
@@ -147,7 +147,7 @@ server <- function(input, output) {
           position = "topright",
           pal = pal,
           values = ~number_on_parole_per_100000_us_adult_residents,
-          title = "Number of U.S. Adult Residents on Parole per 100000.",
+          title = "# of U.S. Adults on Parole/100000.",
           opacity = 1)
        
         
