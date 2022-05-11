@@ -91,6 +91,33 @@ pal <- colorBin("Spectral", domain = state_parole$number_on_parole_per_100000_us
 labels <- sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                   state_parole$state, state_parole$number_on_parole_per_100000_us_adult_residents) %>% lapply(htmltools::HTML)
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#Leaflet
+state_map<-leaflet(data = state_parole) %>%
+  addTiles() %>%
+  setView(lng = -80,
+          lat = 34.5,
+          zoom = 4) %>%
+  addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+              fillOpacity = 1,
+              color = "blue",
+              opacity = 0.1,
+              weight = 1,
+              highlight = highlightOptions(
+                weight = 3,
+                color = "blue",
+                fillOpacity = .2,
+                bringToFront = TRUE),
+              label = labels) %>%
+  addLegend(
+    position = "topright",
+    pal = pal,
+    values = ~number_on_parole_per_100000_us_adult_residents,
+    title = "# of U.S. Adults on Parole/100000.",
+    opacity = 1)
+
+
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -118,37 +145,20 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
 
+  #Set YEAR with Slider
+  state_parole_year <- reactive({
+    state_parole %>%
+    filter(year == year(input$year))})
+  
     output$mymap <- renderLeaflet({
+      state_map%>%
+      leaflet(data = state_parole_year())
       
       
-      #Set YEAR with Slider
-      reactive({
-      state_parole <- state_parole %>%
-        filter(year == year(input$year))})
-      #Leaflet
-      leaflet(data = state_parole) %>%
-        addTiles() %>%
-        setView(lng = -80,
-                lat = 34.5,
-                zoom = 4) %>%
-        addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
-                    fillOpacity = 1,
-                    color = "blue",
-                    opacity = 0.1,
-                    weight = 1,
-                    highlight = highlightOptions(
-                      weight = 3,
-                      color = "blue",
-                      fillOpacity = .2,
-                      bringToFront = TRUE),
-                    label = labels) %>%
-        addLegend(
-          position = "topright",
-          pal = pal,
-          values = ~number_on_parole_per_100000_us_adult_residents,
-          title = "# of U.S. Adults on Parole/100000.",
-          opacity = 1)
+     
+     
        
         
         
