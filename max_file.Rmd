@@ -125,7 +125,7 @@ state_parole <- state_parole %>%
   #mutate(total_exp_per_student = TOTAL_EXPENDITURE/GRADES_ALL_G)
   
 #this is for changing color 
-bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
+bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 2000)
 pal <- colorBin("Spectral", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
 
 ```
