@@ -122,7 +122,7 @@ state_map<-leaflet(data = state_parole) %>%
 ui <- fluidPage(
   
   # Application title
-  titlePanel("Maine Prisoner Advocacy Coalition"),
+  titlePanel("Maine Prisoner Advocacy Coalition"), 
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
