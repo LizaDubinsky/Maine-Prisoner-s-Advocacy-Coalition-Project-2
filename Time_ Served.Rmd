@@ -1,0 +1,69 @@
+---
+title: "Time_Served"
+output: html_document
+date: '2022-05-16'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+###Time Served
+
+
+```{r}
+library(readr)
+library(readxl)
+library(leaflet)
+library(ggplot2)
+library(tidyverse)
+
+
+
+Time_Served_Trends <- read_excel("Time Served Trends.xlsx")
+
+
+#states without parole
+stateswop <- c("AZ", "CA", "DE", "FL", "IL", "IA", "KS", "ME", "MN", "NM", "NC", "OH", "OR", "VA", "WA", "WI")
+
+#putting df into new object and changing the column names
+Time_served_df <- Time_Served_Trends[2:582,]
+colnames(Time_served_df)[3] <- "MEAN TIME SERVED (ALL OFFENSES)"
+colnames(Time_served_df)[4] <- "MEAN TIME SERVED (VIOLENT OFFENSES)"
+colnames(Time_served_df)[5] <- "MEAN TIME SERVED (NONVIOLENT OFFENSES)"
+colnames(Time_served_df)[7] <- "MEAN TIME SERVED BY DECILE (BOTTOM 90%)"
+colnames(Time_served_df)[8] <- "MEAN TIME SERVED BY DECILE (TOP 10%)"
+
+Time_served_df <- Time_served_df %>%
+  mutate(parole = case_when(STATE %in% stateswop ~ "No",
+                            TRUE ~ "Yes"
+    ), across(c(3:8), as.numeric))
+    
+
+#Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)` = round(Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)`, 2)) #across to do it to multiple, ask laurie if you can specifiy digits in across rfunction, wasn't able to 
+
+
+
+#creating a plot
+devtools::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+
+#pp <- streamgraph(Time_served_df, key="STATE", value="MEAN TIME SERVED (ALL OFFENSES)", date="YEAR", height="300px", width="1000px") %>%
+ # sg_legend(show=TRUE, label="STATE")
+
+##ask laurie why isn't this code working?? 
+
+#pp <- streamgraph(Time_served_df,Time_served_df[,1], Time_served_df[,3],Time_served_df[,2], height="300px", width="1000px")
+#Error in .subset(x, j) : invalid subscript type 'list'
+
+
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
