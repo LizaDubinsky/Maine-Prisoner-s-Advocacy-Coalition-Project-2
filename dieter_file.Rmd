@@ -44,6 +44,48 @@ lapply(need_load, require, character.only = TRUE)
 ```
 
 ```{r}
+
+```{r}
+#install.packages("xaringanthemer")
+library(tidyverse)
+library(tidymodels)
+#library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+#install.packages("maps")
+#install.packages("corrplot")
+
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+
+library(dplyr)
+#library(dsbox)
+library(skimr)
+library(robotstxt)
+library(tidyr) 
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(kableExtra) ## Table output
+#install.packages("geojsonio")
+#install.packages("rgdal")
+#install.packages("leaflet")
+library(leaflet)
+#install.packages("geojsonio")
+library(geojsonio)
+library(sf)
+library(leaflet)
+#install.packages("sf")
+library(RColorBrewer)
+```
+```
+
+
+```{r}
 incar <- read.csv("incarceration_trends.csv")
 
 ```
@@ -87,7 +129,9 @@ joint_info_map <- year_1970 %>%
 
 joint_info_map  <- joint_info_map  %>%
   #filter(total_pop) %>%
-  mutate(total_pop = total_pop)
+  mutate(total_pop = total_pop)#this is for changing color 
+bins <- c(0, 1000, 15000, 300000, 50000,1000000,5000000)
+pal <- colorBin("Spectral", domain = joint_info_map$total_pop, bins = bins)
 ```
 
 ```{r}
@@ -123,7 +167,6 @@ leaflet() %>%
     title = "Total pop by county",
     opacity = 1)
 ```
-
 
 
 

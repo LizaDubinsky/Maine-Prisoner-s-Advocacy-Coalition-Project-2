@@ -120,8 +120,18 @@ state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
 
+#%%%%%%%% Merging Labels
+state_parole$label <- ""
+for(i in 1:nrow(state_parole))
+  {
+  state_parole$label[i]<- paste(state_parole$state[i], state_parole$number_on_parole_per_100000_us_adult_residents[i], sep = ": ")
+  
+  state_parole$label[i]<- paste(state_parole$label[i], "# on Parole/100,000 Adults", sep = " ")
+  }
+#%%%%%%%%
+
 state_parole <- state_parole %>%
-  filter(year==1995)
+  filter(year==1996)
   #mutate(total_exp_per_student = TOTAL_EXPENDITURE/GRADES_ALL_G)
   
 #this is for changing color 

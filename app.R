@@ -75,7 +75,7 @@ states <- states %>%
   mutate(name = str_to_lower(name))
 
 parole_df <- parole_df %>%
-  mutate(state = str_to_lower(state))
+  mutate(state = as.factor(str_to_lower(state)))
 
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
@@ -129,7 +129,7 @@ ui <- fluidPage(
     sidebarPanel(
       sliderInput(inputId = "year",
                   label = "Year:",
-                  min = lubridate::ymd("19850101"),
+                  min = lubridate::ymd("19950101"),
                   max = lubridate::ymd("20160101"),
                   value = lubridate::ymd("20000101"),
                   step = 1,
@@ -150,19 +150,38 @@ server <- function(input, output) {
   #Set YEAR with Slider
   state_parole_year <- reactive({
     state_parole %>%
-      filter(year == year(input$year))})
+      filter(year == year(input$year))
+    })
   
+  #labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
+ #                   state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
+  #  lapply(htmltools::HTML)})
+  
+  labels_year <- reactive({paste("Parole/100000 US Adults",
+        state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents)})
+
+  
+  
+  # maybe subset by state for the color and the label
   output$mymap <- renderLeaflet({
-    state_map%>%
-      data = state_parole_year()
-      
-      
-      
-      
-      
-      
+    state_map %>%
+      addTiles()%>%
+      addPolygons(fillColor = ~ pal(state_parole_year()$number_on_parole_per_100000_us_adult_residents),
+                  fillOpacity = 1,
+                  color = "blue",
+                  opacity = 0.1,
+                  weight = 1,
+                  highlight = highlightOptions(
+                    weight = 3,
+                    color = "blue",
+                    fillOpacity = .2,
+                    bringToFront = TRUE),
+                  label = labels_year())#%>% #labels() --- reactive 
       
   })
+  
+  
+  
 }
 
 # Run the application 
