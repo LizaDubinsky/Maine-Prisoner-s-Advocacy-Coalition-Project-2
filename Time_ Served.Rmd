@@ -22,6 +22,7 @@ library(readr)
 library(readxl)
 library(leaflet)
 library(ggplot2)
+library(dplyr)
 library(tidyverse)
 
 
@@ -43,7 +44,13 @@ colnames(Time_served_df)[8] <- "MEAN TIME SERVED BY DECILE (TOP 10%)"
 Time_served_df <- Time_served_df %>%
   mutate(parole = case_when(STATE %in% stateswop ~ "No",
                             TRUE ~ "Yes"
-    ), across(c(3:8), as.numeric))
+    ), across(c(3:8), as.numeric), across(c(3:8), round))
+
+#creating shorter df for streamgraph
+Time_served_df_plot <- Time_served_df %>%
+  select(STATE:`MEAN TIME SERVED (ALL OFFENSES)`) %>%
+  group_by(YEAR) %>%
+  arrange(desc(YEAR))
     
 
 #Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)` = round(Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)`, 2)) #across to do it to multiple, ask laurie if you can specifiy digits in across rfunction, wasn't able to 
@@ -54,7 +61,7 @@ Time_served_df <- Time_served_df %>%
 devtools::install_github("hrbrmstr/streamgraph")
 library(streamgraph)
 
-#pp <- streamgraph(Time_served_df, key="STATE", value="MEAN TIME SERVED (ALL OFFENSES)", date="YEAR", height="300px", width="1000px") %>%
+pp <- streamgraph(Time_served_df_plot, key="STATE", value="MEAN TIME SERVED (ALL OFFENSES)", date="YEAR", height="300px", width="1000px")
  # sg_legend(show=TRUE, label="STATE")
 
 ##ask laurie why isn't this code working?? 
