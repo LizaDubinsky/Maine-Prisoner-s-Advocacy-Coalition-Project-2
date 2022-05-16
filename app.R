@@ -177,15 +177,11 @@ server <- function(input, output) {
                     fillOpacity = .2,
                     bringToFront = TRUE),
                   label = labels_year())#%>% #labels() --- reactive 
-    
-    
-      
-      
-      
-      
-      
       
   })
+  
+  
+  
 }
 
 # Run the application 
