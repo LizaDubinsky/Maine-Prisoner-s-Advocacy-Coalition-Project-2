@@ -121,7 +121,7 @@ state_parole <- parole_df %>%
   st_as_sf()
 
 state_parole <- state_parole %>%
-  filter(year==1995)
+  filter(year==1996)
   #mutate(total_exp_per_student = TOTAL_EXPENDITURE/GRADES_ALL_G)
   
 #this is for changing color 
