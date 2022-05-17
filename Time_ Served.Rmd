@@ -17,7 +17,7 @@ When you click the **Knit** button a document will be generated that includes bo
 ###Time Served
 
 
-```{r}
+```{r data cleaning}
 library(readr)
 library(readxl)
 library(leaflet)
@@ -48,7 +48,7 @@ Time_served_df <- Time_served_df %>%
 
 #creating shorter df for streamgraph
 Time_served_df_plot <- Time_served_df %>%
-  select(STATE:`MEAN TIME SERVED (ALL OFFENSES)`) %>%
+  select(!4:8) %>%
   group_by(YEAR) %>%
   arrange(desc(YEAR))
     
@@ -57,11 +57,19 @@ Time_served_df_plot <- Time_served_df %>%
 
 
 
-#creating a plot
+#needed packages to create the plot
 devtools::install_github("hrbrmstr/streamgraph")
+devtools::install_github("hrbrmstr/hrbrthemes")
+install.packages("viridis")
+library(viridis)
+library(hrbrthemes)
+#library(gcookbook)
+library(tidyverse)
+# current verison should be 0.6.0 or higher
+packageVersion("hrbrthemes")
 library(streamgraph)
 
-colnames(Time_served_df_plot) <- c("State", "Year", "Avg_Time_Served_all")
+colnames(Time_served_df_plot) <- c("State", "Year", "Avg_Time_Served_all", "Parole")
 
 #pp <- streamgraph(Time_served_df_plot, key = Time_served_df_plot$State, value = #Time_served_df_plot$`Avg Time Served (all)`, date = Time_served_df_plot$Year, height="300px", width="1000px")
  # sg_legend(show=TRUE, label="STATE")
@@ -75,24 +83,54 @@ colnames(Time_served_df_plot) <- c("State", "Year", "Avg_Time_Served_all")
 
 ```
 
-```{r}
+```{r creating plot}
 #change labels
 #color by parole or not parole in Country
 #check for better way to visualize?
 
+
+
+install.packages("ggrepel")
+install.packages("ggtext")
+install.packages("showtext")
+library(tidyverse)
+library(ggrepel)
+library(ggtext)
+
+library(showtext)
+font_add_google("Lato")
+showtext_auto()
+
+#highlight <- list()
+
+#Time_served_df_plot %>%
+#  while (i <= length(Time_served_df_plot)) {
+ #    if (Parole == "Yes") {
+  #    highlight[i] <- Time_served_df_plot[i,1]
+   #   i + 1
+    #}
+  #}
+
+
+
+Time_served_df_plot <- Time_served_df_plot[1:576,]
+
 Time_served_df_plot %>%
-ggplot(aes(x=Year, y=Avg_Time_Served_all, group=State)) +
-    geom_line(aes(group=State), color="grey", size=0.5, alpha=0.5) +
-    geom_line(aes(color=State), color="#69b3a2", size=1.2 ) +
-    #scale_color_viridis(discrete = TRUE) +
+  ggplot(aes(x=Year, y=Avg_Time_Served_all, group=State, color = Parole)) +
+    geom_line(aes(group=State), size=0.5, alpha=0.5) +
+    geom_line(aes(color=Parole), size=1.2 ) +
+    scale_color_viridis(discrete = TRUE) +
     #theme_ipsum() +
     theme(
-      legend.position="none",
+      legend.position="bottom",
       plot.title = element_text(size=14),
       panel.grid = element_blank()
     ) +
-    ggtitle("A spaghetti chart of baby names popularity") +
+    ggtitle("The Mean Time Served in Prison for All Offense categories ") +
     facet_wrap(~State)
+#can include when exaclty these states decided to abolish parole and label it on the plot
+
+#can create a ribbon plot , to include data about bottom 90th percentile and top 10th percentile
 ```
 
 
