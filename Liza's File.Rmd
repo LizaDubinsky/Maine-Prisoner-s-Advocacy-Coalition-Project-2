@@ -129,3 +129,89 @@ write.csv(x = all_parole_years, file = "all_parole_years.csv", row.names = FALSE
 final_parole_data <- read.csv("all_parole_years.csv")
 
 ```
+
+
+
+```{r}
+incarceration_trends <- read.csv("incarceration_trends.csv")
+maine_data <- subset(incarceration_trends, state == "ME")
+```
+
+```{r}
+first_year_data <- maine_data %>%
+  filter(year == 1970)
+last_year_data <- maine_data %>%
+  filter(year == 2018)
+
+# libraries:
+library(ggplot2)
+library(gganimate)
+ 
+# Make 2 basic states and concatenate them:
+a <- data.frame(group = first_year_data$county_name, values = (first_year_data$total_jail_pop)/(first_year_data$total_pop), frame = rep('a', 16))
+b <- data.frame(group= last_year_data$county_name, values = (last_year_data$total_jail_pop)/(last_year_data$total_pop), frame = rep('b', 16))
+  
+  
+
+data <- rbind(a,b)  
+ 
+# Basic barplot:
+ggplot(a, aes(x = group, y = values, fill = group)) + 
+  geom_bar(stat='identity')
+ 
+# Make a ggplot, but add frame=year: one image per year
+ggplot(data, aes(x=group, y=values, fill=group)) + 
+  geom_bar(stat='identity') +
+  theme_bw() +
+  # gganimate specific bits:
+  transition_states(
+    frame,
+    transition_length = 2,
+    state_length = 1
+  ) +
+  ease_aes('sine-in-out') + 
+  scale_fill_viridis_d() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(
+    title = "Ratio of Prison Population to Total Population in Maine Counties From 1970 to 2018",
+    x = "County Name",
+    y = "Ratio of Prison Population to Total Population"
+         ) +
+  theme(legend.position = "none")
+
+anim_save("maine_county_bar_plot.gif")
+```
+
+
+
+```{r}
+maine_data_2 <- read.csv("Maine_incarceration_data-1.csv")
+crime_counts <- maine_data_2 %>%
+  filter(county_name == "Androscoggin County") %>%
+  group_by(year) %>%
+  select(year, county_name, violent_crime, property_crime, property_crime, murder_crime, robbery_crime)
+
+crimes <- c(crime_counts$violent_crime, crime_counts$property_crime)
+  
+p <- ggplot(
+  crime_counts,
+  aes(year, violent_crime)
+  ) +
+  geom_line() +
+  scale_color_viridis_d() +
+  labs(x = "Day of Month", y = "Temperature") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+```
+
+```{r}
+data <- data.frame(x=rep(1:5, 3),
+                   value=sample(1:100, 15), 
+                   variable=rep(paste0('series', 1:3), each=5))
+
+
+#plot all three series on the same chart using geom_line()
+ggplot(data = data, aes(x=x, y=value)) + geom_line(aes(colour=variable))
+```
