@@ -187,31 +187,48 @@ anim_save("maine_county_bar_plot.gif")
 ```{r}
 maine_data_2 <- read.csv("Maine_incarceration_data-1.csv")
 crime_counts <- maine_data_2 %>%
-  filter(county_name == "Androscoggin County") %>%
   group_by(year) %>%
   select(year, county_name, violent_crime, property_crime, property_crime, murder_crime, robbery_crime)
 
 crimes <- c(crime_counts$violent_crime, crime_counts$property_crime)
   
 p <- ggplot(
-  crime_counts,
-  aes(year, violent_crime)
+  maine_data,
+  aes(year, jail_rated_capacity, group = county_name, color = county_name)
   ) +
   geom_line() +
-  scale_color_viridis_d() +
-  labs(x = "Day of Month", y = "Temperature") +
+  labs(x = "Year", y = "Jail Rated Capacity") +
   theme(legend.position = "top")
 p + 
   geom_point() +
   transition_reveal(year)
+anim_save("violent_crime_maine.gif")
 ```
 
 ```{r}
-data <- data.frame(x=rep(1:5, 3),
-                   value=sample(1:100, 15), 
-                   variable=rep(paste0('series', 1:3), each=5))
+p <- ggplot(
+  maine_data,
+  aes(year, total_pop, group = county_name, color = county_name)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Total Population") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("total_population_maine.gif")
+```
 
-
-#plot all three series on the same chart using geom_line()
-ggplot(data = data, aes(x=x, y=value)) + geom_line(aes(colour=variable))
+```{r}
+p <- ggplot(
+  maine_data,
+  aes(year, total_jail_pop, group = county_name, color = county_name)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Total Jail Population") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("jail_population_maine.gif")
 ```
