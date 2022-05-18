@@ -43,7 +43,7 @@ lapply(need_load, require, character.only = TRUE)
 #library(dsbox)
 ```
 
-```{r}
+
 
 ```{r}
 #install.packages("xaringanthemer")
@@ -82,14 +82,11 @@ library(leaflet)
 #install.packages("sf")
 library(RColorBrewer)
 ```
-```
-
 
 ```{r}
 incar <- read.csv("incarceration_trends.csv")
 
 ```
-
 
 ```{r}
 library(tidyverse)
@@ -111,9 +108,6 @@ year_1970 <- incar[maine_data,]
 
 ```
 
-
-
-
 ```{r}
 year_1970<- year_1970 %>%
   mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
@@ -131,7 +125,8 @@ joint_info_map  <- joint_info_map  %>%
   #filter(total_pop) %>%
   mutate(total_pop = total_pop)#this is for changing color 
 bins <- c(0, 1000, 15000, 300000, 50000,1000000,5000000)
-pal <- colorBin("Spectral", domain = joint_info_map$total_pop, bins = bins)
+pal <- colorBin("Blues", domain = joint_info_map$total_pop, bins = bins)
+
 ```
 
 ```{r}
@@ -150,7 +145,7 @@ leaflet() %>%
           lat = 34.5,
           zoom = 4) %>%
   addPolygons(#fillColor = ~pal(median_score_per_student),
-              fillOpacity = 0.1,
+              fillOpacity = 1,
               color = "blue",
               opacity = 1,
               weight = 1,
@@ -166,11 +161,8 @@ leaflet() %>%
     values = ~total_pop,
     title = "Total pop by county",
     opacity = 1)
+
 ```
-
-
-
-
 
 ```{r}
 states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
@@ -181,7 +173,6 @@ library(readr)
 
 states_all <- read_csv("https://raw.githubusercontent.com/DCS-210/project-kathleen-thomas-meg-dieter/main/data/states_all.csv")
 ```
-
 
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
@@ -241,7 +232,6 @@ leaflet() %>%
     opacity = 1)
 
 ```
-
 
 ```{r}
 
@@ -337,5 +327,86 @@ library(sf)
 library(leaflet)
 #install.packages("sf")
 library(RColorBrewer)
+```
+
+
+```{r}
+state_parole$label <- ""
+for(i in 1:nrow(state_parole))
+{
+  state_parole$label[i]<- paste(state_parole$state[i], state_parole$number_on_parole_per_100000_us_adult_residents[i], sep = ": ")
+  
+  state_parole$label[i]<- paste(state_parole$label[i], "# on Parole/100,000 Adults", sep = " ")
+}
+```
+
+```{r}
+years <- list(1996:2016)
+
+years_count <- vector(mode = "list", len = nrow(years))
+for(year in years)
+  {
+  for(i in 1:nrow(state_parole))
+    {
+    if(state_parole$year[i] == year)
+      {
+      years_count[year-1995] <- years_count[year-1995] + 1
+      }
+    }
+}
+
+
+
+```
+```{r}
+print("1995-1999")
+sum(state_parole$year == "1995", na.rm = TRUE)
+sum(state_parole$year == "1996", na.rm = TRUE)
+sum(state_parole$year == "1997", na.rm = TRUE)
+sum(state_parole$year == "1998", na.rm = TRUE)
+sum(state_parole$year == "1999", na.rm = TRUE)
+print("2000-2005")
+sum(state_parole$year == "2000", na.rm = TRUE)
+sum(state_parole$year == "2001", na.rm = TRUE)
+sum(state_parole$year == "2002", na.rm = TRUE)
+sum(state_parole$year == "2003", na.rm = TRUE)
+sum(state_parole$year == "2004", na.rm = TRUE)
+sum(state_parole$year == "2005", na.rm = TRUE)
+print("2006-2010")
+sum(state_parole$year == "2006", na.rm = TRUE)
+sum(state_parole$year == "2007", na.rm = TRUE)
+sum(state_parole$year == "2008", na.rm = TRUE)
+sum(state_parole$year == "2009", na.rm = TRUE)
+sum(state_parole$year == "2010", na.rm = TRUE)
+print("2011-2015")
+sum(state_parole$year == "2011", na.rm = TRUE)
+sum(state_parole$year == "2012", na.rm = TRUE)
+sum(state_parole$year == "2013", na.rm = TRUE)
+sum(state_parole$year == "2014", na.rm = TRUE)
+sum(state_parole$year == "2015", na.rm = TRUE)
+
+```
+
+
+```{r}
+state1998 <- state_parole%>%
+  filter(year == 1998)%>%
+  arrange(state)
+state1998
+state1999 <- state_parole%>%
+  filter(year == 1999) %>%
+  arrange(state)
+state1999
+#janitor package
+```
+```{r}
+state_parole$year[633]<- strtoi(1999)
+state_parole$year[648]<- strtoi(1999)
+
+```
+
+```{r}
+
+
 ```
 

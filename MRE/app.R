@@ -80,7 +80,6 @@ parole_df <- parole_df %>%
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
-#fixing the data set where there was repetition.
 state_parole$year[633]<- strtoi(1999)
 state_parole$year[648]<- strtoi(1999)
 
@@ -141,8 +140,8 @@ ui <- fluidPage(
     sidebarPanel(
       sliderInput(inputId = "year",
                   label = "Year:",
-                  min = lubridate::ymd("19980101"),
-                  max = lubridate::ymd("20080101"),
+                  min = lubridate::ymd("19950101"),
+                  max = lubridate::ymd("20160101"),
                   value = lubridate::ymd("20000101"),
                   step = 1,
                   timeFormat = "%Y")
@@ -159,16 +158,22 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   
-  #Reactive year selection for slider
+  #Set YEAR with Slider
   state_parole_year <- reactive({
     state_parole %>%
       filter(year == year(input$year))
     })
-  # Reactive Labels for leaflet map 
+  #subset parole_df into the year and then join it to the states
   labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                     state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
     lapply(htmltools::HTML)})
   
+  #labels_year <- reactive({paste("Parole/100000 US Adults",
+    #    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents)})
+
+  
+  
+  # maybe subset by state for the color and the label
   output$mymap <- renderLeaflet({
     state_map %>%
       addTiles()%>%
@@ -183,6 +188,8 @@ server <- function(input, output) {
                     fillOpacity = .2,
                     bringToFront = TRUE),
                   label = ~labels_year())
+   
+      
   })
   
   
