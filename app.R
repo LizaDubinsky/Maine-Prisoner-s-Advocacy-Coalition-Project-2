@@ -80,6 +80,7 @@ parole_df <- parole_df %>%
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
+#fixing the data set where there was repetition.
 state_parole$year[633]<- strtoi(1999)
 state_parole$year[648]<- strtoi(1999)
 
@@ -140,8 +141,8 @@ ui <- fluidPage(
     sidebarPanel(
       sliderInput(inputId = "year",
                   label = "Year:",
-                  min = lubridate::ymd("19950101"),
-                  max = lubridate::ymd("20160101"),
+                  min = lubridate::ymd("19980101"),
+                  max = lubridate::ymd("20080101"),
                   value = lubridate::ymd("20000101"),
                   step = 1,
                   timeFormat = "%Y")
