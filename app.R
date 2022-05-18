@@ -97,7 +97,7 @@ for(i in 1:nrow(state_parole))
 
 #this is for changing color 
 bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 2000)
-pal <- colorBin("Spectral", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
+pal <- colorBin("Greens", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
 
 labels <- sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                   state_parole$state, state_parole$number_on_parole_per_100000_us_adult_residents) %>% lapply(htmltools::HTML)
