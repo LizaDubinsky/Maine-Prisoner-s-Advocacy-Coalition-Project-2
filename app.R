@@ -159,22 +159,16 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   
-  #Set YEAR with Slider
+  #Reactive year selection for slider
   state_parole_year <- reactive({
     state_parole %>%
       filter(year == year(input$year))
     })
-  #subset parole_df into the year and then join it to the states
+  # Reactive Labels for leaflet map 
   labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                     state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
     lapply(htmltools::HTML)})
   
-  #labels_year <- reactive({paste("Parole/100000 US Adults",
-    #    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents)})
-
-  
-  
-  # maybe subset by state for the color and the label
   output$mymap <- renderLeaflet({
     state_map %>%
       addTiles()%>%
@@ -189,8 +183,6 @@ server <- function(input, output) {
                     fillOpacity = .2,
                     bringToFront = TRUE),
                   label = ~labels_year())
-   
-      
   })
   
   
