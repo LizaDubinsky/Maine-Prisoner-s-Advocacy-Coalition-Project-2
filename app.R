@@ -80,6 +80,8 @@ parole_df <- parole_df %>%
 state_parole <- parole_df %>%
   left_join(states, by = c("state"="name")) %>%
   st_as_sf()
+state_parole$year[633]<- strtoi(1999)
+state_parole$year[648]<- strtoi(1999)
 
 #%%%%%%%% Merging Labels
 state_parole$label <- ""
@@ -161,13 +163,13 @@ server <- function(input, output) {
     state_parole %>%
       filter(year == year(input$year))
     })
+  #subset parole_df into the year and then join it to the states
+  labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
+                    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
+    lapply(htmltools::HTML)})
   
-  #labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
- #                   state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
-  #  lapply(htmltools::HTML)})
-  
-  labels_year <- reactive({paste("Parole/100000 US Adults",
-        state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents)})
+  #labels_year <- reactive({paste("Parole/100000 US Adults",
+    #    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents)})
 
   
   
@@ -185,7 +187,8 @@ server <- function(input, output) {
                     color = "blue",
                     fillOpacity = .2,
                     bringToFront = TRUE),
-                  label = labels_year())#%>% #labels() --- reactive 
+                  label = ~labels_year())
+   
       
   })
   
