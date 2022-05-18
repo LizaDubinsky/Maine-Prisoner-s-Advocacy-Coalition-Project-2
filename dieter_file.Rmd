@@ -125,7 +125,8 @@ joint_info_map  <- joint_info_map  %>%
   #filter(total_pop) %>%
   mutate(total_pop = total_pop)#this is for changing color 
 bins <- c(0, 1000, 15000, 300000, 50000,1000000,5000000)
-pal <- colorBin("Spectral", domain = joint_info_map$total_pop, bins = bins)
+pal <- colorBin("Blues", domain = joint_info_map$total_pop, bins = bins)
+
 ```
 
 ```{r}
@@ -144,7 +145,7 @@ leaflet() %>%
           lat = 34.5,
           zoom = 4) %>%
   addPolygons(#fillColor = ~pal(median_score_per_student),
-              fillOpacity = 0.1,
+              fillOpacity = 1,
               color = "blue",
               opacity = 1,
               weight = 1,
@@ -160,6 +161,7 @@ leaflet() %>%
     values = ~total_pop,
     title = "Total pop by county",
     opacity = 1)
+
 ```
 
 ```{r}
