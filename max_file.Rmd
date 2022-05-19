@@ -185,6 +185,7 @@ year_1970 <- incar[maine_data,]
 ```
 
 ```{r}
+
 year_1970<- year_1970 %>%
   mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
 

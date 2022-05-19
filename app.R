@@ -208,6 +208,20 @@ ui <- fluidPage(
                   timeFormat = "%Y")
     ),
     
+    #Drop Down Menu for Counties################################################
+    selectInput(
+      inputId = "data_choice",
+      label= "Data Selection",
+      choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
+                 "Proportion of Non-Violent Crimes"),
+      selected = NULL,
+      multiple = FALSE,
+      selectize = TRUE,
+      width = 400,
+      size = 3
+    ),
+    ############################################################################
+    
     # Show a plot of the generated distribution
     mainPanel(
       leafletOutput("mymap")#,
@@ -225,8 +239,8 @@ server <- function(input, output) {
     state_parole %>%
       filter(year == year(input$year))
     })
-  # reactive year selection for slider coutny map 
-  # amybe join the reactive above
+  # reactive year selection for slider county map 
+  # maybe join the reactive above
  # county_pop_year <- reactive({
   #  joint_info_map %>%
    #   filter(year == year(input$year))
