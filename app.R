@@ -128,6 +128,66 @@ state_map<-leaflet(data = state_parole) %>%
     title = "# of U.S. Adults on Parole/100000.",
     opacity = 1)
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#County map data set cleaning and manipulation  
+#Importing state/County JSON containing fip and geometry of the counties
+all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json", what= "sp")
+#AK<-geojsonio::geojson_read(x = "https://raw.githubusercontent.com/billcccheng/us-county-boundary-api/master/states/AK.json", what = "sp")
+
+incar <- read.csv("incarceration_trends.csv")
+year_1970 <- incar
+
+
+year_1970<- year_1970 %>%
+  mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
+
+all_counties <- st_as_sf(all_counties)
+all_counties <- all_counties %>%
+  mutate(NAME = str_to_lower(NAME))
+
+joint_info_map <- year_1970 %>%
+  left_join(all_counties, by = c("county_name" = "NAME")) %>%
+  st_as_sf()
+
+
+joint_info_map  <- joint_info_map  %>%
+  #filter(total_pop) %>%
+  mutate(total_pop = total_pop)
+#this is for changing color 
+bins_1 <- c(0, 0.5,1,2,4,15)
+pal_1 <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins_1)
+
+labels_1 <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
+                  joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% 
+  lapply(htmltools::HTML)
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%
+#County leaflet map 
+county_map <- joint_info_map%>%
+  leaflet() %>%
+  addTiles()%>%
+  setView(lng = -80,
+          lat = 34.5,
+          zoom = 4) %>%
+  addPolygons(fillColor = ~pal(total_jail_pop/(total_pop/1000)),
+              fillOpacity = 1,
+              color = "blue",
+              opacity = 1,
+              weight = 1,
+              highlight = highlightOptions(
+                weight = 3,
+                color = "blue",
+                fillOpacity = .2,
+                bringToFront = TRUE),
+              label = labels_1) %>%
+  addLegend(
+    position = "topright",
+    pal = pal_1,
+    values = ~total_jail_pop/(total_pop/1000),
+    title = "Ratio of Jail Pop per 1000",
+    opacity = 1)
+
+
 
 
 # Define UI for application that draws a histogram
@@ -141,8 +201,8 @@ ui <- fluidPage(
     sidebarPanel(
       sliderInput(inputId = "year",
                   label = "Year:",
-                  min = lubridate::ymd("19980101"),
-                  max = lubridate::ymd("20080101"),
+                  min = lubridate::ymd("19950101"),
+                  max = lubridate::ymd("20160101"),
                   value = lubridate::ymd("20000101"),
                   step = 1,
                   timeFormat = "%Y")
@@ -150,7 +210,8 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      leafletOutput("mymap")
+      leafletOutput("mymap")#,
+      #leafletOutput("countymap")
     )
   )
 )
@@ -159,18 +220,51 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   
-  #Reactive year selection for slider
+  #Reactive year selection for slider state map
   state_parole_year <- reactive({
     state_parole %>%
       filter(year == year(input$year))
     })
+  # reactive year selection for slider coutny map 
+  # amybe join the reactive above
+ # county_pop_year <- reactive({
+  #  joint_info_map %>%
+   #   filter(year == year(input$year))
+  #})
+  
   # Reactive Labels for leaflet map 
   labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                     state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
     lapply(htmltools::HTML)})
   
+  # county labels 
+  #labels_year_county <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
+   #                             county_pop_year()$county_name, county_pop_year()$total_jail_pop/(county_pop_year()$total_pop/1000)) %>% 
+    #lapply(htmltools::HTML)
+  
   output$mymap <- renderLeaflet({
-    state_map %>%
+    leaflet(data = state_parole_year()) %>%
+      addTiles() %>%
+      setView(lng = -80,
+              lat = 34.5,
+              zoom = 4) %>%
+      addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+                  fillOpacity = 1,
+                  color = "blue",
+                  opacity = 0.1,
+                  weight = 1,
+                  highlight = highlightOptions(
+                    weight = 3,
+                    color = "blue",
+                    fillOpacity = .2,
+                    bringToFront = TRUE),
+                  label = labels) %>%
+      addLegend(
+        position = "topright",
+        pal = pal,
+        values = ~number_on_parole_per_100000_us_adult_residents,
+        title = "# of U.S. Adults on Parole/100000.",
+        opacity = 1) %>%
       addTiles()%>%
       addPolygons(fillColor = ~ pal(state_parole_year()$number_on_parole_per_100000_us_adult_residents),
                   fillOpacity = 1,
@@ -183,11 +277,13 @@ server <- function(input, output) {
                     fillOpacity = .2,
                     bringToFront = TRUE),
                   label = ~labels_year())
+    
+    
   })
-  
   
   
 }
 
+ 
 # Run the application 
 shinyApp(ui = ui, server = server)
