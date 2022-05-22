@@ -158,7 +158,7 @@ bins_1 <- c(0, 0.5,1,2,4,15)
 pal_1 <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins_1)
 
 labels_1 <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
-                  joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% 
+                    joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% 
   lapply(htmltools::HTML)
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -208,16 +208,16 @@ ui <- fluidPage(
                   timeFormat = "%Y")),
     
     #Drop Down Menu for Counties################################################
-   # selectInput(
+    # selectInput(
     #  inputId = "data_choice",
-     # label= "Data Selection",
-      #choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
-      #           "Proportion of Non-Violent Crimes"),
-      #selected = NULL,
-      #multiple = FALSE,
-      #selectize = TRUE,
-      #width = 400,
-      #size = 3
+    # label= "Data Selection",
+    #choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
+    #           "Proportion of Non-Violent Crimes"),
+    #selected = NULL,
+    #multiple = FALSE,
+    #selectize = TRUE,
+    #width = 400,
+    #size = 3
     #),
     ############################################################################
     
@@ -225,7 +225,9 @@ ui <- fluidPage(
     
     
     mainPanel(
-      leafletOutput("mymap")
+      tabsetPanel(tabPanel("State-Level", leafletOutput("mymap")), 
+                  tabPanel("County Level",leafletOutput("countymap"))
+      )
       
     )
   )
@@ -240,14 +242,23 @@ server <- function(input, output) {
   state_parole_year <- reactive({
     state_parole %>%
       filter(year == year(input$year))
-    })
-  
+  })
+  # reactive year selection for slider county map 
+  # maybe join the reactive above
+  # county_pop_year <- reactive({
+  #  joint_info_map %>%
+  #   filter(year == year(input$year))
+  #})
   
   # Reactive Labels for leaflet map 
   labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
-                    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
-    lapply(htmltools::HTML)})
+                                    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
+      lapply(htmltools::HTML)})
   
+  # county labels 
+  #labels_year_county <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
+  #                             county_pop_year()$county_name, county_pop_year()$total_jail_pop/(county_pop_year()$total_pop/1000)) %>% 
+  #lapply(htmltools::HTML)
   
   output$mymap <- renderLeaflet({
     leaflet(data = state_parole_year()) %>%
@@ -293,6 +304,6 @@ server <- function(input, output) {
   
 }
 
- 
+
 # Run the application 
 shinyApp(ui = ui, server = server)
