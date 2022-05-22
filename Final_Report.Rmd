@@ -1,0 +1,51 @@
+---
+title: "Maine Prisoner Advocacy Coalition Project 2"
+subtitle: "Visualizing Prison and Parole Data"
+date: "Wednesday, May 25 2022"
+author: "Liza Dubinsky, Max Lauster, Sokona Mangane, Dieter Villegas"
+output:   
+  html_document:
+    toc: true
+    toc_float : true
+    number_sections : true
+    theme: united
+    toc_depth: 4
+---
+ 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+  
+## Executive Summary
+
+## List of Figures
+
+## Introduction
+
+### Background and Context
+
+### Community Partner Identified Problem
+
+## Methodological Approach
+
+### Depth and Accessibility of Data
+
+### Our Approach
+
+## Results and Discussion
+
+### Maine State Analysis
+
+### New England Region Analysis
+
+### Nationwide Tool for Further Data Exploration 
+
+## Recommendations for Next Steps
+
+### Data Collection 
+
+### Model Effect of Reinstatement of Parole in Maine
+
+## References Cited
+
+## Appendices

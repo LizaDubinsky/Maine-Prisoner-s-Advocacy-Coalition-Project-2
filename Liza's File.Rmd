@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# load packages 
+
 ```{r message=FALSE}
 library(tidyverse) 
 library(openintro)
@@ -20,10 +22,14 @@ library(dplyr)
 
 ## Exploring Dataset
 
+# read in maine dataset 
+
 ```{r}
 maine_data <- read.csv("Maine_incarceration_data-1.csv")
 ```
 
+
+# exporatory graphs 
 
 ```{r}
 maine_data %>%
@@ -36,6 +42,8 @@ maine_data %>%
   labs(x = "Year", x = "Total Jail Population")
 ```
 
+# manipulating parole data
+
 ```{r}
 parole_data_1 <- read.csv("parole_data_LD.csv")
 parole_data_1 = subset(parole_data_1, select = -c(X, X.1, X.2, X.3, X.4))
@@ -46,6 +54,8 @@ clean_test <- clean_test <- janitor::clean_names(read_parole)
 parole_years_1 <- clean_test
 colnames(parole_years_1) <- c("year", "state_abbreviation", "state", "number_on_parole_per_100000_us_adult_residents")
 ```
+
+# manipulating other half of parole data
 
 ```{r}
 
@@ -118,10 +128,14 @@ new_parole_df <- new_parole_df %>%
 
 ```
 
+# manipulating parole data
+
 ```{r}
 parole_years_2 <- subset(new_parole_df, select = c("Year", "State.Abbreviation", "new_state", "num_parole_per_capita"))
 colnames(parole_years_2) <- c("year", "state_abbreviation", "state", "number_on_parole_per_100000_us_adult_residents")
 ```
+
+# writing parole file 
 
 ```{r}
 all_parole_years <- rbind(parole_years_1, parole_years_2)
@@ -130,12 +144,14 @@ final_parole_data <- read.csv("all_parole_years.csv")
 
 ```
 
-
+# reading in maine dataset from larger file
 
 ```{r}
 incarceration_trends <- read.csv("incarceration_trends.csv")
 maine_data <- subset(incarceration_trends, state == "ME")
 ```
+
+# create animated bar plot 
 
 ```{r}
 first_year_data <- maine_data %>%
@@ -231,4 +247,176 @@ p +
   geom_point() +
   transition_reveal(year)
 anim_save("jail_population_maine.gif")
+```
+
+
+```{r}
+
+crime_counts <- maine_data_2 %>%
+  group_by(year) %>%
+  select(year, county_name, violent_crime, property_crime, property_crime, murder_crime, robbery_crime)
+
+crime_counts <- crime_counts %>%
+  filter(county_name == "Androscoggin County")
+
+crime_counts <- pivot_longer(crime_counts, cols = c(violent_crime, property_crime, property_crime, murder_crime, robbery_crime), names_to = "crime_type")
+  
+# Plot
+crime_counts %>%
+  ggplot( aes(x=year, y=value, group=crime_type, color=crime_type)) +
+    geom_line() +
+    geom_point() +
+    ggtitle("Crime Trends") +
+    theme_ipsum() +
+    ylab("Crime Counts") +
+    transition_reveal(year)
+
+anim_save("androscoggin_crime_types.gif")
+```
+
+
+```{r}
+# libraries:
+library(ggplot2)
+library(gganimate)
+library(babynames)
+library(hrbrthemes)
+
+crime_counts <- maine_data_2 %>%
+  group_by(year) %>%
+  select(year, county_name, violent_crime, property_crime, property_crime, murder_crime, robbery_crime)
+
+crime_counts <- crime_counts %>%
+  filter(county_name == "Cumberland County")
+
+crime_counts <- pivot_longer(crime_counts, cols = c(violent_crime, property_crime, property_crime, murder_crime, robbery_crime), names_to = "crime_type")
+  
+# Plot
+crime_counts %>%
+  ggplot( aes(x=year, y=value, group=crime_type, color=crime_type)) +
+    geom_line() +
+    geom_point() +
+    ggtitle("Crime Trends in Cumberland County") +
+    theme_ipsum() +
+    ylab("Crime Counts") +
+    transition_reveal(year)
+
+anim_save("cumberland_crime_types.gif")
+```
+
+
+# grab new england states
+
+```{r}
+new_england_states <- incarceration_trends %>%
+  filter(state == c("ME", "NH", "MA", "VT", "RI", "CT")) 
+
+# Charge libraries:
+library(ggplot2)
+library(gganimate)
+
+# Make a ggplot, but add frame=year: one image per year
+ggplot(new_england_states, aes(jail_rated_capacity, total_jail_pop, color = state)) +
+  geom_point() +
+  theme_bw() +
+  # gganimate specific bits:
+  labs(title = 'Year: {frame_time}', x = 'Jail Rated Capacity', y = 'Total Jail Population') +
+  transition_time(year) +
+  ease_aes('linear')
+
+# Save at gif:
+anim_save("new_england_plots.gif")
+  
+```
+
+
+```{r}
+prison_expenditures <- read.csv("price-of-prisons-state-survey-data.csv")
+colnames(prison_expenditures) <- c("state", "average_cost_per_inmate_2015", "state_res_2015", "incarc_rate_2015", "cost_per_res_2015", "prison_pop_2010", "prison_pop_2015", "change_in_prison_pop", "2010", "2015", "change_in_expenditures", "salaries_overtime_share_2015", "personnel_services_share_2015", "boarding_payments_share_2015", "healthcare_share_2015", "other_costs_share_2015")
+
+prison_expenditures <- prison_expenditures[-c(46:102), ]
+prison_expenditures <- prison_expenditures %>% 
+  select((state:other_costs_share_2015))
+
+prison_expenditures <- pivot_longer(prison_expenditures, cols = c("2010", "2015"), names_to = "year")
+
+m <- prison_expenditures %>%
+  filter(state == "Massachusetts") %>%
+  ggplot(aes(fill=year, y=value, x=year)) +
+  geom_bar(position='dodge', stat='identity') + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(
+    x = "Year", y = "Prison Expenditures", fill = "Prison Expenditures 2010 and 2015", title = "Massachusetts Prison Expenditures"
+    ) + 
+  scale_fill_viridis_d()
+
+m + transition_states(year, wrap = FALSE) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade()
+
+c <- prison_expenditures %>%
+  filter(state == "Connecticut") %>%
+  ggplot(aes(fill=year, y=value, x=year)) +
+  geom_bar(position='dodge', stat='identity') + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(
+    x = "Year", y = "Prison Expenditures", fill = "Prison Expenditures 2010 and 2015", title = "Connecticut Prison Expenditures"
+    ) + 
+  scale_fill_viridis_d()
+
+c + transition_states(year, wrap = FALSE) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade()
+
+v <- prison_expenditures %>%
+  filter(state == "Vermont") %>%
+  ggplot(aes(fill=year, y=value, x=year)) +
+  geom_bar(position='dodge', stat='identity') + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(
+    x = "Year", y = "Prison Expenditures", fill = "Prison Expenditures 2010 and 2015", title = "Vermont Prison Expenditures"
+    ) + 
+  scale_fill_viridis_d()
+
+v + transition_states(year, wrap = FALSE) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade()
+
+r <- prison_expenditures %>%
+  filter(state == "Rhode Island") %>%
+  ggplot(aes(fill=year, y=value, x=year)) +
+  geom_bar(position='dodge', stat='identity') + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(
+    x = "Year", y = "Prison Expenditures", fill = "Prison Expenditures 2010 and 2015", title = "Rhode Island Prison Expenditures"
+    ) + 
+  scale_fill_viridis_d()
+
+r + transition_states(year, wrap = FALSE) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade()
+```
+
+
+```{r}
+
+incarc_trends_2 <- read.csv("incarceration_trends2.csv")
+mass_data <- incarc_trends_2 %>%
+  filter(state == "MA")
+
+p <- ggplot(
+  mass_data,
+  aes(year, jail_rated_capacity, group = county_name, color = county_name)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Jail Rated Capacity") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("mass_jail_rated_cap.gif")
 ```

@@ -205,30 +205,32 @@ ui <- fluidPage(
                   max = lubridate::ymd("20160101"),
                   value = lubridate::ymd("20000101"),
                   step = 1,
-                  timeFormat = "%Y")
-    ),
+                  timeFormat = "%Y")),
     
     #Drop Down Menu for Counties################################################
-    selectInput(
-      inputId = "data_choice",
-      label= "Data Selection",
-      choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
-                 "Proportion of Non-Violent Crimes"),
-      selected = NULL,
-      multiple = FALSE,
-      selectize = TRUE,
-      width = 400,
-      size = 3
-    ),
+   # selectInput(
+    #  inputId = "data_choice",
+     # label= "Data Selection",
+      #choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
+      #           "Proportion of Non-Violent Crimes"),
+      #selected = NULL,
+      #multiple = FALSE,
+      #selectize = TRUE,
+      #width = 400,
+      #size = 3
+    #),
     ############################################################################
     
     # Show a plot of the generated distribution
+    
+    
     mainPanel(
-      leafletOutput("mymap")#,
-      #leafletOutput("countymap")
+      leafletOutput("mymap")
+      
     )
   )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -239,22 +241,13 @@ server <- function(input, output) {
     state_parole %>%
       filter(year == year(input$year))
     })
-  # reactive year selection for slider county map 
-  # maybe join the reactive above
- # county_pop_year <- reactive({
-  #  joint_info_map %>%
-   #   filter(year == year(input$year))
-  #})
+  
   
   # Reactive Labels for leaflet map 
   labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
                     state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
     lapply(htmltools::HTML)})
   
-  # county labels 
-  #labels_year_county <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
-   #                             county_pop_year()$county_name, county_pop_year()$total_jail_pop/(county_pop_year()$total_pop/1000)) %>% 
-    #lapply(htmltools::HTML)
   
   output$mymap <- renderLeaflet({
     leaflet(data = state_parole_year()) %>%
