@@ -18,13 +18,33 @@ knitr::opts_chunk$set(echo = TRUE)
   
 ## Executive Summary
 
+This project was completed in collaboration with Jan Collins, the Assistant Director of the Maine Prisoner Advocacy Coalition and with guidance from Bates Professors Michael Rocque from the Sociology Department and M. Mena from the Anthropology Department. The focus of this project was to visualize prison and parole data to aid in the ongoing efforts of the Maine Prisoner Advocacy Coalition to campaign for the reinstatement of parole in Maine. This report includes animated visualizations and interactive maps to inform the work of the Maine Prisoner Advocacy Coalition.
+
+Quick Issue Background
+
+Methodology Overview
+
+Recommendations/Next Steps
+
+Summary/Conclusion
+
 ## List of Figures
 
 ## Introduction
 
 ### Background and Context
 
+Issue Background/Statistics/Definitions
+
+Work of MPAC
+
 ### Community Partner Identified Problem
+
+
+
+What We Did
+
+We hope that this report will complement the work of the Maine Prisoner Advocacy Coalition by visualizing existing criminal justice data to inform efforts to reinstate parole in Maine.
 
 ## Methodological Approach
 
