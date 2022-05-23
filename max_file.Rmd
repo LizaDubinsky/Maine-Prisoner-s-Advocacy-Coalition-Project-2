@@ -191,7 +191,7 @@ year_1970<- year_1970 %>%
 
 all_counties <- st_as_sf(all_counties)
 all_counties <- all_counties %>%
-  mutate(NAME = str_to_lower(NAME))
+  mutate(NAME = as.factor(str_to_lower(NAME)))
 
 joint_info_map <- year_1970 %>%
   left_join(all_counties, by = c("county_name" = "NAME")) %>%
