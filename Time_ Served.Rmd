@@ -134,7 +134,7 @@ Time_Served_Trends[2:577,] %>%
       #panel.grid = element_blank()
     #) +
    labs(y= "The Average Time Served For All Offenses (Years)", title = "The Average Time Served For All Offenses In Each State") +
-    facet_wrap(~State) + xlim(1990, 2014) + ylim(0, 8)
+    facet_wrap(~State) + xlim(1993, 2014) + ylim(0, 8)
 
 #check when most of the eyars actually start reoprting data and chaning xlim()based on that and then change x and y limits on the other plots based on this
 ```
@@ -161,7 +161,7 @@ Time_served_All_States %>%
     geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12) +
   geom_line(aes(x= Year, y = Average_Sentence_Length, color = Parole)) + 
   facet_wrap(~Sentence_Type, labeller = labeller(Sentence_Type = Sentence_Type.labs)) +
-  labs(y= "The Average Time Served For Different Offenses (Years)", title = "The Average Time Served For Different Types of Offenses In All States")
+  labs(y= "The Average Time Served For Different Offenses (Years)", title = "The Average Time Served For Different Types of Offenses In All States") + xlim(1989, 2014) + ylim(0, 6.5)
 
 
 
@@ -188,8 +188,8 @@ Time_served_All_States %>%
   pivot_longer(cols = c("mean_all", "mean_v", "mean_nv"), names_to = "Sentence_Type", values_to = "Average_Sentence_Length") %>%
   ggplot() + 
   geom_line(aes(x= Year, y = mean_top_10, color = Parole)) + 
-  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Top 10% of the Prison Pop. in All States") 
-    #geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12)
+  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Top 10% of the Prison Pop. in All States") + xlim(1989, 2014) + ylim(0, 22.5)
+    #geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12) 
 
 
 
@@ -197,7 +197,7 @@ Time_served_All_States %>%
   pivot_longer(cols = c("mean_all", "mean_v", "mean_nv"), names_to = "Sentence_Type", values_to = "Average_Sentence_Length") %>%
   ggplot() + 
   geom_line(aes(x= Year, y = mean_bottom_90, color = Parole)) +
-  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Bottom 90% of the Prison Pop. in All States") 
+  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Bottom 90% of the Prison Pop. in All States") + xlim(1989, 2014) + ylim(0, 2.8)
     #geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12)
   
 
