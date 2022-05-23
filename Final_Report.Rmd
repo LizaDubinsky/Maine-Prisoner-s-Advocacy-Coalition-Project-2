@@ -52,6 +52,8 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 
 ### Our Approach
 After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
+
+
 ## Results and Discussion
 
 ### Maine State Analysis
@@ -59,7 +61,7 @@ After realizing the discrepancies in the Vera data set, our team collected infor
 ### New England Region Analysis
 
 ### Nationwide Tool for Further Data Exploration  
-
+The data collected has been compiled into two separate interactive national maps that portray the information on a county and state level. The state map shows the number of adults on parole per one hundred thousand adult residents. This information is useful in showing which states have the most wide reaching parole and which states, like Maine, have not parole in recent years. It is worth noting that while Maine has had no parole recently, there are still a few individuals who were eligible for parole due to their sentences coming before parole was removed. The county level map displays the ratio of the jail population to the total population per one thousand residents. This normalizes the differences in population size and starts to look at which regions have higher and longer rates of incarcerations. Both of these maps will aid in further understanding the state of Maine prison reform compared to the rest of the US. 
 ## Recommendations for Next Steps
 
 ### Data Collection 
