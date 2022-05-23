@@ -1,6 +1,4 @@
 library(shiny)
-library(leaflet)
-library(dplyr)
 library(lubridate)
 
 #Install Packages for Leaflet %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,14 +24,13 @@ need_load<-my_packages[!(my_packages %in% ya_loaded)]
 # Load required packages
 lapply(need_load, require, character.only = TRUE)
 
-#install.packages("xaringanthemer")
+
 library(tidyverse)
 library(tidymodels)
-#library(palmerpenguins)
+
 library(knitr)
 library(xaringanthemer)
-#install.packages("maps")
-#install.packages("corrplot")
+
 
 library(maps)
 library(ggplot2)
@@ -51,82 +48,11 @@ library(RColorBrewer) ## For colour palettes
 library(htmltools) ## For html
 library(leafsync) ## For placing plots side by side
 library(kableExtra) ## Table output
-#install.packages("geojsonio")
-#install.packages("rgdal")
-#install.packages("leaflet")
-library(leaflet)
-#install.packages("geojsonio")
 library(geojsonio)
-library(sf)
-library(leaflet)
-#install.packages("sf")
-library(RColorBrewer)
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#READ IN JSON FOR STATE DATA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-states <- geojsonio::geojson_read(x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
-                                  , what = "sp")
-class(states)
-
-library(readr)
-parole_df <- read.csv("all_parole_years.csv")
-
-states <- st_as_sf(states)
-states <- states %>%
-  mutate(name = str_to_lower(name))
-
-parole_df <- parole_df %>%
-  mutate(state = as.factor(str_to_lower(state)))
-
-state_parole <- parole_df %>%
-  left_join(states, by = c("state"="name")) %>%
-  st_as_sf()
-#fixing the data set where there was repetition.
-state_parole$year[633]<- strtoi(1999)
-state_parole$year[648]<- strtoi(1999)
-
-#%%%%%%%% Merging Labels
-state_parole$label <- ""
-for(i in 1:nrow(state_parole))
-{
-  state_parole$label[i]<- paste(state_parole$state[i], state_parole$number_on_parole_per_100000_us_adult_residents[i], sep = ": ")
-  
-  state_parole$label[i]<- paste(state_parole$label[i], "# on Parole/100,000 Adults", sep = " ")
-}
-#%%%%%%%%
 
 
 
-#this is for changing color 
-bins <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 2000)
-pal <- colorBin("Greens", domain = state_parole$number_on_parole_per_100000_us_adult_residents, bins = bins)
 
-labels <- sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
-                  state_parole$state, state_parole$number_on_parole_per_100000_us_adult_residents) %>% lapply(htmltools::HTML)
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-#Leaflet
-state_map<-leaflet(data = state_parole) %>%
-  addTiles() %>%
-  setView(lng = -80,
-          lat = 34.5,
-          zoom = 4) %>%
-  addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
-              fillOpacity = 1,
-              color = "blue",
-              opacity = 0.1,
-              weight = 1,
-              highlight = highlightOptions(
-                weight = 3,
-                color = "blue",
-                fillOpacity = .2,
-                bringToFront = TRUE),
-              label = labels) %>%
-  addLegend(
-    position = "topright",
-    pal = pal,
-    values = ~number_on_parole_per_100000_us_adult_residents,
-    title = "# of U.S. Adults on Parole/100000.",
-    opacity = 1)
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #County map data set cleaning and manipulation  
@@ -161,32 +87,7 @@ labels_1 <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
                     joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% 
   lapply(htmltools::HTML)
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%
-#County leaflet map 
-county_map <- joint_info_map%>%
-  leaflet() %>%
-  addTiles()%>%
-  setView(lng = -80,
-          lat = 34.5,
-          zoom = 4) %>%
-  addPolygons(fillColor = ~pal(total_jail_pop/(total_pop/1000)),
-              fillOpacity = 1,
-              color = "blue",
-              opacity = 1,
-              weight = 1,
-              highlight = highlightOptions(
-                weight = 3,
-                color = "blue",
-                fillOpacity = .2,
-                bringToFront = TRUE),
-              label = labels_1) %>%
-  addLegend(
-    position = "topright",
-    pal = pal_1,
-    values = ~total_jail_pop/(total_pop/1000),
-    title = "Ratio of Jail Pop per 1000",
-    opacity = 1)
-
+#%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -207,31 +108,15 @@ ui <- fluidPage(
                   step = 1,
                   timeFormat = "%Y")),
     
-    #Drop Down Menu for Counties################################################
-    # selectInput(
-    #  inputId = "data_choice",
-    # label= "Data Selection",
-    #choices=c("Proportion of Jail Population", "Proportion of Violent Crimes", 
-    #           "Proportion of Non-Violent Crimes"),
-    #selected = NULL,
-    #multiple = FALSE,
-    #selectize = TRUE,
-    #width = 400,
-    #size = 3
-    #),
-    ############################################################################
     
-    # Show a plot of the generated distribution
     
     
     mainPanel(
-      tabsetPanel(tabPanel("State-Level", leafletOutput("mymap")), 
-                  tabPanel("County Level",leafletOutput("countymap"))
+      leafletOutput("countymap")
       )
-      
     )
   )
-)
+
 
 
 # Define server logic required to draw a histogram
@@ -239,36 +124,43 @@ server <- function(input, output) {
   
   
   #Reactive year selection for slider state map
-  state_parole_year <- reactive({
-    state_parole %>%
+  county_year <- reactive({
+    joint_info_map %>%
       filter(year == year(input$year))
   })
-  # reactive year selection for slider county map 
-  # maybe join the reactive above
-  # county_pop_year <- reactive({
-  #  joint_info_map %>%
-  #   filter(year == year(input$year))
-  #})
-  
-  # Reactive Labels for leaflet map 
-  labels_year <- reactive({ sprintf("<strong>%s</strong><br/>%g Parole/100000 US Adults",
-                                    state_parole_year()$state, state_parole_year()$number_on_parole_per_100000_us_adult_residents) %>% 
-      lapply(htmltools::HTML)})
-  
+ 
+  # Reactive Labels for leaflet map
   # county labels 
-  #labels_year_county <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
-  #                             county_pop_year()$county_name, county_pop_year()$total_jail_pop/(county_pop_year()$total_pop/1000)) %>% 
-  #lapply(htmltools::HTML)
+  labels_year_county <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
+                               county_year()$county_name, county_year()$total_jail_pop/(county_year()$total_pop/1000)) %>% 
+  lapply(htmltools::HTML)
   
-  output$mymap <- renderLeaflet({
-    leaflet(data = state_parole_year()) %>%
-      addTiles() %>%
-      setView(lng = -80,
-              lat = 34.5,
-              zoom = 4) %>%
-      addPolygons(fillColor = ~ pal(state_parole$number_on_parole_per_100000_us_adult_residents),
+  output$countymap <- renderLeaflet({
+    leaflet(data = county_year()) %>%
+        addTiles()%>%
+        setView(lng = -80,
+                lat = 34.5,
+                zoom = 4) %>%
+        addPolygons(fillColor = ~pal(joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)),
+                    fillOpacity = 1,
+                    color = "black",
+                    opacity = 1,
+                    weight = 1,
+                    highlight = highlightOptions(
+                      weight = 3,
+                      color = "blue",
+                      fillOpacity = .2,
+                      bringToFront = TRUE),
+                    label = labels_1) %>%
+        addLegend(
+          position = "topright",
+          pal = pal_1,
+          values = ~total_jail_pop/(total_pop/1000),
+          title = "Ratio of Jail Pop per 1000",
+          opacity = 1)%>%
+      addPolygons(fillColor = ~pal(county_year()$total_jail_pop/(county_year()$total_pop/1000)),
                   fillOpacity = 1,
-                  color = "blue",
+                  color = "black",
                   opacity = 0.1,
                   weight = 1,
                   highlight = highlightOptions(
@@ -276,34 +168,10 @@ server <- function(input, output) {
                     color = "blue",
                     fillOpacity = .2,
                     bringToFront = TRUE),
-                  label = labels) %>%
-      addLegend(
-        position = "topright",
-        pal = pal,
-        values = ~number_on_parole_per_100000_us_adult_residents,
-        title = "# of U.S. Adults on Parole/100000.",
-        opacity = 1) %>%
-      addTiles()%>%
-      addPolygons(fillColor = ~ pal(state_parole_year()$number_on_parole_per_100000_us_adult_residents),
-                  fillOpacity = 1,
-                  color = "blue",
-                  opacity = 0.1,
-                  weight = 1,
-                  highlight = highlightOptions(
-                    weight = 3,
-                    color = "blue",
-                    fillOpacity = .2,
-                    bringToFront = TRUE),
-                  label = ~labels_year())
-    
+                  label = ~labels_year_county())
     
   })
-  
-  
-  
-  
 }
-
 
 # Run the application 
 shinyApp(ui = ui, server = server)
