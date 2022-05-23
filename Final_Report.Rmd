@@ -40,8 +40,6 @@ Work of MPAC
 
 ### Community Partner Identified Problem
 
-
-
 What We Did
 
 We hope that this report will complement the work of the Maine Prisoner Advocacy Coalition by visualizing existing criminal justice data to inform efforts to reinstate parole in Maine.
@@ -49,8 +47,6 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ## Methodological Approach
 
 ### Depth and Accessibility of Data
-
-
 
 ### Our Approach
 
@@ -60,13 +56,15 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
    
 ### New England Region Analysis
 
+### Measuring the Effectiveness of Parole
+
 ### Nationwide Tool for Further Data Exploration  
 
 ## Recommendations for Next Steps
 
 ### Data Collection 
 
-### Model Effect of Reinstatement of Parole in Maine
+### Model Effect of Parole Reinstatement in Maine
 
 ## References Cited
 
