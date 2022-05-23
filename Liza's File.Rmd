@@ -252,6 +252,8 @@ anim_save("jail_population_maine.gif")
 
 ```{r}
 
+library(hrbrthemes)
+
 crime_counts <- maine_data_2 %>%
   group_by(year) %>%
   select(year, county_name, violent_crime, property_crime, property_crime, murder_crime, robbery_crime)
@@ -341,7 +343,7 @@ prison_expenditures <- prison_expenditures %>%
 prison_expenditures <- pivot_longer(prison_expenditures, cols = c("2010", "2015"), names_to = "year")
 
 m <- prison_expenditures %>%
-  filter(state == "Massachusetts") %>%
+  filter(state == c("Massachusetts", "Connecticut")) %>%
   ggplot(aes(fill=year, y=value, x=year)) +
   geom_bar(position='dodge', stat='identity') + 
   theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
@@ -420,3 +422,71 @@ p +
   transition_reveal(year)
 anim_save("mass_jail_rated_cap.gif")
 ```
+
+
+```{r}
+new_england_jail_capacity <- incarc_trends_2 %>%
+  filter(state == c("MA", "NH", "ME")) %>%
+  group_by(state, year) %>%
+  summarise(state_jail_capacity = (sum(jail_rated_capacity))/(sum(total_pop))*1000)
+    
+
+p <- ggplot(
+  new_england_jail_capacity,
+  aes(year, state_jail_capacity, group = state, color = state)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Jail Rated Capacity") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("new_england_jail_capacity.gif")
+
+```
+
+```{r}
+new_england_crime_counts <- read.csv("incarceration_trends3.csv") %>%
+  filter(state == c("MA", "NH", "ME", "VT", "CT", "RI")) %>%
+  select(year, state, county_name, total_pop, index_crime) %>%
+  group_by(state, year) %>%
+  summarise(state_index_crime = (sum(index_crime))/(sum(total_pop))*1000)
+
+
+p <- ggplot(
+  new_england_crime_counts,
+  aes(year, state_index_crime, group = state, color = state)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Index Crime Count") +
+  theme(legend.position = "top")
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("new_england_crime_count.gif")
+```
+
+
+```{r}
+prison_counts <- incarceration_trends %>%
+  select(year, state, county_name, total_prison_pop, total_jail_pop, total_pop) %>%
+  group_by(state, year) %>%
+  summarise(total_incarcerated = sum(total_prison_pop) + sum(total_jail_pop))
+
+parole_counts <- all_parole_years 
+  
+```
+
+
+```{r}
+maine_prison_counts <- maine_data %>%
+  select(year, state, county_name, total_prison_pop, total_jail_pop, total_pop) %>%
+  group_by(state, year) %>%
+  summarise(total_incarcerated = sum(total_prison_pop + total_jail_pop))
+
+
+maine_prison_counts %>% 
+    group_by(year) %>% 
+    summarise(total_incarcerated = sum(total_prison_pop))
+```
+
