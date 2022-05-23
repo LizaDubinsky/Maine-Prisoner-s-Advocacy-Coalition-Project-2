@@ -49,7 +49,7 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ### Depth and Accessibility of Data
 
 ### Our Approach
-
+After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
 ## Results and Discussion
 
 ### Maine State Analysis
