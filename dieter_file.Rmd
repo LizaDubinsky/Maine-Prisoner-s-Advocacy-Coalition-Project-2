@@ -457,8 +457,8 @@ joint_info_map <- year_1970 %>%
 joint_info_map  <- joint_info_map  %>%
   mutate(total_pop = total_pop)
 #this is for changing color 
-bins_1 <- c(0, 0.5,1,2,4,15)
-pal_1 <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins_1)
+bins <- c(0, 0.5,1,2,4,15,194)
+pal <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins)
 
 labels_1 <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
                     joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% 
@@ -466,7 +466,6 @@ labels_1 <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
 ```
 
 ```{r}
-
 leaflet(data = joint_info_map) %>%
       addTiles() %>%
       setView(lng = -80,
@@ -485,9 +484,11 @@ leaflet(data = joint_info_map) %>%
                   label = labels_1) %>%
       addLegend(
         position = "topright",
-        pal = pal_1,
+        pal = pal,
         values = ~total_jail_pop/(total_pop/1000),
         title = "Ratio of Jail Pop per 1000",
         opacity = 1) 
+
 ```
+
 
