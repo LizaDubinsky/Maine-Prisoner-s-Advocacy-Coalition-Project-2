@@ -6,24 +6,6 @@ library(lubridate)
 
 knitr::opts_chunk$set(echo = TRUE)
 
-# Store string containing all required packages
-my_packages <- c('bipartite', 'RColorBrewer')
-# Store all installed packages
-ya_installed <- library()$results[,1]
-
-# Check whether required packages are already installed and grab only those that still need installation
-need_install<-my_packages[!(my_packages %in% ya_installed)]
-
-#install required packages
-lapply({need_install}, install.packages, character.only = TRUE)
-# Store all installed packages
-ya_loaded <- (.packages())
-
-# Check whether required packages are already installed and grab only those that still need installation
-need_load<-my_packages[!(my_packages %in% ya_loaded)]
-
-# Load required packages
-lapply(need_load, require, character.only = TRUE)
 
 #install.packages("xaringanthemer")
 library(tidyverse)
