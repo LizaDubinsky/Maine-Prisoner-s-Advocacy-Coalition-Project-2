@@ -535,13 +535,14 @@ p <- ggplot(
   aes(year, percent_filled)
   ) +
   geom_line() +
-  labs(x = "Year", y = "Number of Incarcerated People", title = "Number of Incaracerated People in Maine From 1970 to 2018") +
+  labs(x = "Year", y = "Percent Filled", title = "Percentage of Jails Filled in Maine") +
   theme(legend.position = "top") +
   scale_color_viridis_d()
+
 p + 
   geom_point() +
   transition_reveal(year)
-anim_save("me_incarcerated_count.gif")
+anim_save("me_percentage_filled.gif")
 
 ```
 
@@ -576,3 +577,25 @@ m
 
 ```
 
+```{r}
+percentage_new_england <- incarc_trends_2 %>%
+  filter(state %in% c("ME", "VT", "NH", "RI", "CT", "MA")) %>%
+  select(state, year, jail_rated_capacity, total_jail_pop) %>%
+  group_by(state, year) %>%
+  summarise(percent_filled = (sum(total_jail_pop, na.rm = TRUE))/((sum(jail_rated_capacity, na.rm = TRUE))))
+
+
+p <- ggplot(
+  jail_percentage,
+  aes(year, percent_filled)
+  ) +
+  geom_line() +
+  labs(x = "Year", y = "Percent Filled", title = "Percentage of Jail Filled in Maine") +
+  theme(legend.position = "top") +
+  scale_color_viridis_d()
+
+p + 
+  geom_point() +
+  transition_reveal(year)
+anim_save("me_incarcerated_count.gif")
+```
