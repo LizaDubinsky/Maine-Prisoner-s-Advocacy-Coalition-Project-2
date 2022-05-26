@@ -24,6 +24,14 @@ The conclusion of our work is that a deeper understanding of parole in Maine can
 
 ## Introduction
 
+For our community engaged data science project, we worked with the Maine Prisoner Advocacy Coaltion. Their broader goal is to try to enforce ethical and positive change in the Maine prison system. One of the changes they’ve been working towards is to reinstate parole in Maine. Maine was one of the first states, out of 16, to abolish parole, in 1976. 
+
+States with parole have a policy called indetereminate sentencing, where the individual who’s been imprisoned release date isn’t set in stone. There isn’t any “pure” indeterminate sentencing (where an individuals release date is entirely up to the parole board), but to put it broadly, in states with indeterminate sentencing, judges give a maximum sentencen and in most cases, parole boards decide on release dates, based on the state parole policies, the type of crime commited, their behavior, and etc. However, states without parole have what we call determinate sentencing, thus the parole board doeesn’t determine the release date.
+
+However, some states have decided to restore parole (Conneticut, Colorado, Mississippi). Since last year, a bill, L.D. 842, was passed by the House and Senate to create a commission to examine restablishing parole in Maine, however the governor of Maine hasn’t signed the bill into a law yet.
+
+Therefore, in order to support this campaign, we explored questions that helped us look at the viability of parole in Maine.  To reiterate, in states with parole, the parole board has a significant impact on the length of stay, which is directly tied to state resources; it costs money to put prisoners in prison, thus, shorter prison sentences decrease the jail capacity (as in how many beds can the prison accommodate) and state resources. Therefore, we sought to investigate how average sentence length, jail capacity, and prison expenditures inform the effectiveness of parole and whether it would be beneficial in Maine. To evaluate, we sought to compare these factors to other states in New England, because their demographics and urban cities are similar to Maine. We also wanted to look at the statistics of parole outcomes and jail populations in the U.S. for the MPAC to use as statistical evidence if need be. 
+
 ### Background and Context
 
 Maine was  the first state to abolish parole, the conditional release of incarcerated individuals before they complete their prison sentences, in 1976. Maine is 1 of 16 states without parole in the United States. Attempts to restore parole have been infrequent with 18 bills addressing the system filed in the last 30 years. Recently LD. 842 was passed to study what restoring parole in Maine would look like. 
@@ -35,7 +43,6 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ## Methodological Approach
 
 To investigate how prison sentences inform the effectiveness of parole, we compared the lengths of prison sentences in states with parole versus without, hoping that states without parole would have longer sentences. We pulled the data from the Urban Institute, which called their data from the National Corrections Reporting Program; the dataset contained the average time served in each state from 1970-2014 for all, violent and nonviolent offenses. We then created line graphs of the time served for these different variables and for the top 10% and bottom 90% of the prison population. 
-
 
 ### Depth and Accessibility of Data
 
