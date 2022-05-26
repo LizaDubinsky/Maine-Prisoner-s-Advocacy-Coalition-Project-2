@@ -22,8 +22,6 @@ This project was completed in collaboration with Jan Collins, the Assistant Dire
 We first approach this project by gathering data from distinct reliable sources including the Vera Institute of Justice, the Bureau of Justice Statistics, and Urban Institute. It is important to note that all datasets had low rates of reporting for many variables. The questions we focus to answer are: How can we best visualize existing data to support MPAC’s campaign to reinstate parole in Maine?  And How do average sentence length, jail rated capacity, and prison expenditures inform the effectiveness of parole? We used the statistical programming language, R, to clean and analyze the data and create visualizations. This project contains bar plots, line graphs, and interactive geo maps to analyze the information gathered. We recommend contacting local, state and federal officials and organizations to make data more accessible in order to further analyze the individual and wide impact of parole. With individual prison data, we can investigate the effectiveness with parole and answer questions like the following:  How common are repeat offenses? Who are prisoners in Maine? What are parole outcomes in states with parole that are similar to Maine? What would a parole bill in Maine look like? Is there evidence of abstaining from crime by former offenders?
 The conclusion of our work is that a deeper understanding of parole in Maine can only be achieved through more detailed data collection and consistent transparency from prisons. 
 
-## List of Figures
-
 ## Introduction
 
 ### Background and Context
@@ -88,7 +86,7 @@ This leads to the next recommendation which would be to lobby for more thorough 
 With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
 
 ## References Cited
-Bureau of Justice Statistics
+**Bureau of Justice Statistics**
 
 Probation and Parole Populations:
 https://bjs.ojp.gov/press-release/probation-and-parole-populations-1996
@@ -99,7 +97,7 @@ https://bjs.ojp.gov/library/publications/recidivism-prisoners-released-24-states
 National Corrections Reporting Program:
 https://www.bjs.gov/index.cfm?ty=dcdetail&iid=268
 
-Vera Institute of Justice 
+**Vera Institute of Justice** 
 
 Incarceration trends:
 https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-01-22
@@ -108,7 +106,7 @@ https://www.vera.org/publications/price-of-prisons-2015-state-spending-trends#pr
 
 
 
-Urban Institute
+**Urban Institute**
 
 The Causes and Consequences of Rising Time Served in America’s Prisons:
 https://apps.urban.org/features/long-prison-terms/data.html
@@ -116,7 +114,7 @@ The Causes and Consequences of Rising Time Served in America’s Prisons
 https://apps.urban.org/features/long-prison-terms/trends.html
 
 
-Articles
+**Articles**
 
 Maine lawmakers to review restoring parole in state prison system
 https://www.wmtw.com/article/parole-in-maine/39765482#
