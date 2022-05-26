@@ -16,6 +16,44 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
   
+```{r}
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(xaringanthemer)
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+library(skimr)
+library(robotstxt)
+library(tidyr) 
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(kableExtra) ## Table output
+library(geojsonio)
+library(readr)
+library(utils)
+library(base)
+library(broom)
+library(datasets)
+library(dials)
+library(forcats)
+library(graphics)
+library(grDevices)
+library(htmltools)
+library(knitr)
+library(methods)
+library(parsnip)
+library(rsample)
+
+```
+
 ## Executive Summary
 
 This project was completed in collaboration with Jan Collins, the Assistant Director of the Maine Prisoner Advocacy Coalition and with guidance from Bates Professors Michael Rocque from the Sociology Department and M. Mena from the Anthropology Department. The focus of this project was to visualize prison and parole data to aid in the ongoing efforts of the Maine Prisoner Advocacy Coalition to campaign for the reinstatement of parole in Maine. This report includes animated visualizations and interactive maps to inform the work of the Maine Prisoner Advocacy Coalition.
@@ -75,31 +113,10 @@ all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/p
 by_year<-incar$year
 maine_data <- by_year =="1970"
 year_1970 <- incar[maine_data,]
-
 ```
 
-```{r}
-library(dplyr)
-library(lubridate)
-library(tidyverse)
-library(tidymodels)
-library(knitr)
-library(xaringanthemer)
-library(maps)
-library(ggplot2)
-library(tidyverse)
-library(corrplot)
-library(skimr)
-library(robotstxt)
-library(tidyr) 
-library(leaflet) ## For leaflet interactive maps
-library(sf) ## For spatial data
-library(RColorBrewer) ## For colour palettes
-library(htmltools) ## For html
-library(leafsync) ## For placing plots side by side
-library(kableExtra) ## Table output
-library(geojsonio)
-```
+
+
 
 ```{r}
 
