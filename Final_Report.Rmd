@@ -15,6 +15,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+<<<<<<< HEAD
 
 ```{r}
 #install.packages("xaringanthemer")
@@ -26,13 +27,26 @@ library(xaringanthemer)
 #install.packages("maps")
 #install.packages("corrplot")
 
+=======
+  
+```{r}
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(xaringanthemer)
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 library(maps)
 library(ggplot2)
 library(tidyverse)
 library(corrplot)
+<<<<<<< HEAD
 
 library(dplyr)
 #library(dsbox)
+=======
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 library(skimr)
 library(robotstxt)
 library(tidyr) 
@@ -42,6 +56,7 @@ library(RColorBrewer) ## For colour palettes
 library(htmltools) ## For html
 library(leafsync) ## For placing plots side by side
 library(kableExtra) ## Table output
+<<<<<<< HEAD
 #install.packages("geojsonio")
 #install.packages("rgdal")
 #install.packages("leaflet")
@@ -55,6 +70,25 @@ library(RColorBrewer)
 ```
 
 
+=======
+library(geojsonio)
+library(readr)
+library(utils)
+library(base)
+library(broom)
+library(datasets)
+library(dials)
+library(forcats)
+library(graphics)
+library(grDevices)
+library(htmltools)
+library(knitr)
+library(methods)
+library(parsnip)
+library(rsample)
+
+```
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## Executive Summary
 
@@ -74,19 +108,19 @@ Summary/Conclusion
 
 ### Background and Context
 
-Issue Background/Statistics/Definitions
-
-Work of MPAC
+Maine was  the first state to abolish parole, the conditional release of incarcerated individuals before they complete their prison sentences, in 1976. Maine is 1 of 16 states without parole in the United States. Attempts to restore parole have been infrequent with 18 bills addressing the system filed in the last 30 years. Recently LD. 842 was passed to study what restoring parole in Maine would look like. 
+The Maine Prisoner Advocacy Coalition was founded in 2007 to improve the conditions of prisoners. They work with groups such as NAACP, ACLU, NAMI, Maine Council of Churches, MERN to protect the rights of prisoners in Maine.
 
 ### Community Partner Identified Problem
-
-
 
 What We Did
 
 We hope that this report will complement the work of the Maine Prisoner Advocacy Coalition by visualizing existing criminal justice data to inform efforts to reinstate parole in Maine.
 
 ## Methodological Approach
+
+To investigate how prison sentences inform the effectiveness of parole, we compared the lengths of prison sentences in states with parole versus without, hoping that states without parole would have longer sentences. We pulled the data from the Urban Institute, which called their data from the National Corrections Reporting Program; the dataset contained the average time served in each state from 1970-2014 for all, violent and nonviolent offenses. We then created line graphs of the time served for these different variables and for the top 10% and bottom 90% of the prison population. 
+
 
 ### Depth and Accessibility of Data
 
@@ -104,7 +138,10 @@ After realizing the discrepancies in the Vera data set, our team collected infor
    
 ### New England Region Analysis
 
+### Measuring the Effectiveness of Parole
+
 ### Nationwide Tool for Further Data Exploration  
+
 The data collected has been compiled into two separate interactive national maps that portray the information on a county and state level. The state map shows the number of adults on parole per one hundred thousand adult residents. This information is useful in showing which states have the most wide reaching parole and which states, like Maine, have not parole in recent years. It is worth noting that while Maine has had no parole recently, there are still a few individuals who were eligible for parole due to their sentences coming before parole was removed. The county level map displays the ratio of the jail population to the total population per one thousand residents. This normalizes the differences in population size and starts to look at which regions have higher and longer rates of incarcerations. Both of these maps will aid in further understanding the state of Maine prison reform compared to the rest of the US.
 
 ```{r}
@@ -115,31 +152,10 @@ all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/p
 by_year<-incar$year
 maine_data <- by_year =="1970"
 year_1970 <- incar[maine_data,]
-
 ```
 
-```{r}
-library(dplyr)
-library(lubridate)
-library(tidyverse)
-library(tidymodels)
-library(knitr)
-library(xaringanthemer)
-library(maps)
-library(ggplot2)
-library(tidyverse)
-library(corrplot)
-library(skimr)
-library(robotstxt)
-library(tidyr) 
-library(leaflet) ## For leaflet interactive maps
-library(sf) ## For spatial data
-library(RColorBrewer) ## For colour palettes
-library(htmltools) ## For html
-library(leafsync) ## For placing plots side by side
-library(kableExtra) ## Table output
-library(geojsonio)
-```
+
+
 
 ```{r}
 
@@ -200,8 +216,12 @@ There is a lot of work still to be done with this research. Using the national m
 ### Data Collection 
 This leads to the next recommendation which would be to lobby for more thorough data collection and reporting which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
 
+<<<<<<< HEAD
 ### Model Effect of Reinstatement of Parole in Maine
 With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
+=======
+### Model Effect of Parole Reinstatement in Maine
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## References Cited
 
