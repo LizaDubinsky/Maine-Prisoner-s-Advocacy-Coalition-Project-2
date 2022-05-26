@@ -1,0 +1,229 @@
+---
+title: "Maine Prisoner Advocacy Coalition Project 2"
+subtitle: "Visualizing Prison and Parole Data"
+date: "Wednesday, May 25 2022"
+author: "Liza Dubinsky, Max Lauster, Sokona Mangane, Dieter Villegas"
+output:   
+  html_document:
+    toc: true
+    toc_float : true
+    number_sections : true
+    theme: united
+    toc_depth: 4
+---
+ 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<<<<<<< HEAD
+
+```{r}
+#install.packages("xaringanthemer")
+library(tidyverse)
+library(tidymodels)
+#library(palmerpenguins)
+library(knitr)
+library(xaringanthemer)
+#install.packages("maps")
+#install.packages("corrplot")
+
+=======
+  
+```{r}
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(xaringanthemer)
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+<<<<<<< HEAD
+
+library(dplyr)
+#library(dsbox)
+=======
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
+library(skimr)
+library(robotstxt)
+library(tidyr) 
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(kableExtra) ## Table output
+<<<<<<< HEAD
+#install.packages("geojsonio")
+#install.packages("rgdal")
+#install.packages("leaflet")
+library(leaflet)
+#install.packages("geojsonio")
+library(geojsonio)
+library(sf)
+library(leaflet)
+#install.packages("sf")
+library(RColorBrewer)
+```
+
+
+=======
+library(geojsonio)
+library(readr)
+library(utils)
+library(base)
+library(broom)
+library(datasets)
+library(dials)
+library(forcats)
+library(graphics)
+library(grDevices)
+library(htmltools)
+library(knitr)
+library(methods)
+library(parsnip)
+library(rsample)
+
+```
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
+
+## Executive Summary
+
+This project was completed in collaboration with Jan Collins, the Assistant Director of the Maine Prisoner Advocacy Coalition and with guidance from Bates Professors Michael Rocque from the Sociology Department and M. Mena from the Anthropology Department. The focus of this project was to visualize prison and parole data to aid in the ongoing efforts of the Maine Prisoner Advocacy Coalition to campaign for the reinstatement of parole in Maine. This report includes animated visualizations and interactive maps to inform the work of the Maine Prisoner Advocacy Coalition.
+
+Quick Issue Background
+
+Methodology Overview
+
+Recommendations/Next Steps
+
+Summary/Conclusion
+
+## List of Figures
+
+## Introduction
+
+### Background and Context
+
+Issue Background/Statistics/Definitions
+
+Work of MPAC
+
+### Community Partner Identified Problem
+
+What We Did
+
+We hope that this report will complement the work of the Maine Prisoner Advocacy Coalition by visualizing existing criminal justice data to inform efforts to reinstate parole in Maine.
+
+## Methodological Approach
+
+To investigate how prison sentences inform the effectiveness of parole, we compared the lengths of prison sentences in states with parole versus without, hoping that states without parole would have longer sentences. We pulled the data from the Urban Institute, which called their data from the National Corrections Reporting Program; the dataset contained the average time served in each state from 1970-2014 for all, violent and nonviolent offenses. We then created line graphs of the time served for these different variables and for the top 10% and bottom 90% of the prison population. 
+
+
+### Depth and Accessibility of Data
+
+Access to data was a consistent struggle in conducting our research as there is a lack of consistent or reliable reporting. The Vera Institute's data reported county statistics but lacked data from many counties. The visualization below depicts the lack of data in the Vera Institutes data set. 
+
+-----------INCLUDE LIZA'S GRAPHS--------------
+
+### Our Approach
+After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. Namely these additional sources were the the Urban Institute and the Department of Justice Statistics.  This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
+
+
+## Results and Discussion
+
+### Maine State Analysis
+   
+### New England Region Analysis
+
+### Measuring the Effectiveness of Parole
+
+### Nationwide Tool for Further Data Exploration  
+
+The data collected has been compiled into two separate interactive national maps that portray the information on a county and state level. The state map shows the number of adults on parole per one hundred thousand adult residents. This information is useful in showing which states have the most wide reaching parole and which states, like Maine, have not parole in recent years. It is worth noting that while Maine has had no parole recently, there are still a few individuals who were eligible for parole due to their sentences coming before parole was removed. The county level map displays the ratio of the jail population to the total population per one thousand residents. This normalizes the differences in population size and starts to look at which regions have higher and longer rates of incarcerations. Both of these maps will aid in further understanding the state of Maine prison reform compared to the rest of the US.
+
+```{r}
+incar <- read.csv("incarceration_trends.csv")
+#Importing state/County JSON containing fip and geometry of the counties
+all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json", what= "sp")
+#AK<-geojsonio::geojson_read(x = "https://raw.githubusercontent.com/billcccheng/us-county-boundary-api/master/states/AK.json", what = "sp")
+by_year<-incar$year
+maine_data <- by_year =="1970"
+year_1970 <- incar[maine_data,]
+```
+
+
+
+
+```{r}
+
+year_1970<- year_1970 %>%
+  mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
+
+all_counties <- st_as_sf(all_counties)
+all_counties <- all_counties %>%
+  mutate(NAME = str_to_lower(NAME))
+
+joint_info_map <- year_1970 %>%
+  left_join(all_counties, by = c("county_name" = "NAME")) %>%
+  st_as_sf()
+
+
+joint_info_map  <- joint_info_map  %>%
+  #filter(total_pop) %>%
+  mutate(total_pop = total_pop)
+#this is for changing color 
+bins <- c(0, 0.5,1,2,4,15)
+pal <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins)
+```
+
+```{r}
+labels <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
+                 joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% lapply(htmltools::HTML)
+```
+
+```{r}
+joint_info_map%>%
+leaflet() %>%
+  addTiles()%>%
+  setView(lng = -80,
+          lat = 34.5,
+          zoom = 4) %>%
+  addPolygons(fillColor = ~pal(total_jail_pop/(total_pop/1000)),
+              fillOpacity = 1,
+              color = "black",
+              opacity = 1,
+              weight = 0.5,
+              highlight = highlightOptions(
+                weight = 3,
+                color = "blue",
+                fillOpacity = .2,
+                bringToFront = TRUE),
+              label = labels) %>%
+  addLegend(
+    position = "topright",
+    pal = pal,
+    values = ~total_jail_pop/(total_pop/1000),
+    title = "Ratio of Jail Pop per 1000",
+    opacity = 1)
+```
+
+## Recommendations for Next Steps
+There is a lot of work still to be done with this research. Using the national maps alongside the Maine specific visualizations, it is important to identify which states have a similar make up of prison systems and how those states have dealt with parole. This is in service of understanding how reintroducing parole in Maine will impact the system and how many people may be eligible. This is a roundabout way of reaching these conclusions due to the lack of reliable information.
+
+### Data Collection 
+This leads to the next recommendation which would be to lobby for more thorough data collection and reporting which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
+
+<<<<<<< HEAD
+### Model Effect of Reinstatement of Parole in Maine
+With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
+=======
+### Model Effect of Parole Reinstatement in Maine
+>>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
+
+## References Cited
+
+## Appendices
