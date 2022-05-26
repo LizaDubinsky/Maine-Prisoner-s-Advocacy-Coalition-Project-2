@@ -15,92 +15,12 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-<<<<<<< HEAD
-
-```{r}
-#install.packages("xaringanthemer")
-library(tidyverse)
-library(tidymodels)
-#library(palmerpenguins)
-library(knitr)
-library(xaringanthemer)
-#install.packages("maps")
-#install.packages("corrplot")
-
-=======
-  
-```{r}
-library(dplyr)
-library(lubridate)
-library(tidyverse)
-library(tidymodels)
-library(knitr)
-library(xaringanthemer)
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
-library(maps)
-library(ggplot2)
-library(tidyverse)
-library(corrplot)
-<<<<<<< HEAD
-
-library(dplyr)
-#library(dsbox)
-=======
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
-library(skimr)
-library(robotstxt)
-library(tidyr) 
-library(leaflet) ## For leaflet interactive maps
-library(sf) ## For spatial data
-library(RColorBrewer) ## For colour palettes
-library(htmltools) ## For html
-library(leafsync) ## For placing plots side by side
-library(kableExtra) ## Table output
-<<<<<<< HEAD
-#install.packages("geojsonio")
-#install.packages("rgdal")
-#install.packages("leaflet")
-library(leaflet)
-#install.packages("geojsonio")
-library(geojsonio)
-library(sf)
-library(leaflet)
-#install.packages("sf")
-library(RColorBrewer)
-```
-
-
-=======
-library(geojsonio)
-library(readr)
-library(utils)
-library(base)
-library(broom)
-library(datasets)
-library(dials)
-library(forcats)
-library(graphics)
-library(grDevices)
-library(htmltools)
-library(knitr)
-library(methods)
-library(parsnip)
-library(rsample)
-
-```
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## Executive Summary
 
 This project was completed in collaboration with Jan Collins, the Assistant Director of the Maine Prisoner Advocacy Coalition and with guidance from Bates Professors Michael Rocque from the Sociology Department and M. Mena from the Anthropology Department. The focus of this project was to visualize prison and parole data to aid in the ongoing efforts of the Maine Prisoner Advocacy Coalition to campaign for the reinstatement of parole in Maine. This report includes animated visualizations and interactive maps to inform the work of the Maine Prisoner Advocacy Coalition.
-
-Quick Issue Background
-
-Methodology Overview
-
-Recommendations/Next Steps
-
-Summary/Conclusion
+We first approach this project by gathering data from distinct reliable sources including the Vera Institute of Justice, the Bureau of Justice Statistics, and Urban Institute. It is important to note that all datasets had low rates of reporting for many variables. The questions we focus to answer are: How can we best visualize existing data to support MPAC’s campaign to reinstate parole in Maine?  And How do average sentence length, jail rated capacity, and prison expenditures inform the effectiveness of parole? We used the statistical programming language, R, to clean and analyze the data and create visualizations. This project contains bar plots, line graphs, and interactive geo maps to analyze the information gathered. We recommend contacting local, state and federal officials and organizations to make data more accessible in order to further analyze the individual and wide impact of parole. With individual prison data, we can investigate the effectiveness with parole and answer questions like the following:  How common are repeat offenses? Who are prisoners in Maine? What are parole outcomes in states with parole that are similar to Maine? What would a parole bill in Maine look like? Is there evidence of abstaining from crime by former offenders?
+The conclusion of our work is that a deeper understanding of parole in Maine can only be achieved through more detailed data collection and consistent transparency from prisons. 
 
 ## List of Figures
 
@@ -108,14 +28,10 @@ Summary/Conclusion
 
 ### Background and Context
 
-Issue Background/Statistics/Definitions
-
-Work of MPAC
+Maine was  the first state to abolish parole, the conditional release of incarcerated individuals before they complete their prison sentences, in 1976. Maine is 1 of 16 states without parole in the United States. Attempts to restore parole have been infrequent with 18 bills addressing the system filed in the last 30 years. Recently LD. 842 was passed to study what restoring parole in Maine would look like. 
+The Maine Prisoner Advocacy Coalition was founded in 2007 to improve the conditions of prisoners. They work with groups such as NAACP, ACLU, NAMI, Maine Council of Churches, MERN to protect the rights of prisoners in Maine.
 
 ### Community Partner Identified Problem
-
-What We Did
-
 We hope that this report will complement the work of the Maine Prisoner Advocacy Coalition by visualizing existing criminal justice data to inform efforts to reinstate parole in Maine.
 
 ## Methodological Approach
@@ -127,7 +43,7 @@ To investigate how prison sentences inform the effectiveness of parole, we compa
 
 Access to data was a consistent struggle in conducting our research as there is a lack of consistent or reliable reporting. The Vera Institute's data reported county statistics but lacked data from many counties. The visualization below depicts the lack of data in the Vera Institutes data set. 
 
------------INCLUDE LIZA'S GRAPHS--------------
+[Graphic of Missing Data](NAdata.png)
 
 ### Our Approach
 After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. Namely these additional sources were the the Urban Institute and the Department of Justice Statistics.  This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
@@ -136,8 +52,25 @@ After realizing the discrepancies in the Vera data set, our team collected infor
 ## Results and Discussion
 
 ### Maine State Analysis
-   
+To inform our later analyses and data exploration tool, we began with an analysis of incarceration trends in Maine. Using our county level dataset from 1970 to 2018, we first visualized the number of incarcerated people per capita in Maine. We calculated the number of incarcerated people in Maine in any given year by summing the prison and jail populations across all Maine counties. Here, we note the spike in this ratio in the early 1990s and a drop around 2016. Due to the inconsistencies in data reporting reflected in the missing data, we are unable to contextualize these patterns in the data.
+
+[Incarcerated Adults Per Capita in Maine](incarcerated_per_capita.gif)
+
+ Next, we visualized the percentage of jails filled in Maine over the same time period. We used jail population and jail rated capacity, the number of inmates a jail can accommodate according to an official body based on infrastructure design and construction. Here, we noticed a sudden increase in this percentage in the 1980s, which is consistent with an article by The Maine Monitor that referred to prison overcrowding in Maine in the 1980s as an incentive to revisit the reinstatement of parole in the state. Further, we see a drop in the percentage of jails filled in the early 2000s which coincides with the construction of the 1,000-bed Maine State Prison in Warren in 2002. 
+ 
+[Percentage of Jails Filled in Maine](jails_filled.gif)
+
+Lastly, we visualized the ratio of prison population to total population across Maine counties from 1970 to 2018. Here, we observe that the ratio of prison population to total population increases across all Maine counties over this time period. The spike in this ratio in Somerset County and Lincoln County are particularly noticeable. It is important to note, however, that the construction of prisons in Maine counties, like the Maine State Prison in Knox County that was responsible for the relocation of incarcerated individuals, is reflected in an increase in the prison population for that county even if there was not an increase in criminal activity.
+
+[Ratio of Prison Population to Total Population in Maine](prison_population.gif)
+
 ### New England Region Analysis
+Our next set of analyses focused on crime trends in the New England region. First, we visualized index crimes committed per capita in New England from 1970 to 2018. Index crimes are the eight crimes that the FBI uses to produce its annual crime index. These crimes are willful homicide, forcible rape, robbery, burglary, aggravated assault, larcenty over $50, motor vehicle theft, and arson. Using the available, yet inconsistent data for the six New England states, we see that there is a decreasing trend in index crimes per capita for all New England states in this time period. Maine fits this overall trend. 
+[Index Crimes in New England](index_crimes.gif)
+Lastly, we visualized burglary crimes committed in the New England region from 1970 to 2018. Burglary crimes were of particular interest to us to inform drug related crimes due to Maine’s opioid epidemic that was lacking in the dataset. We observed that similar to our visualization of index crimes committed per capita in New England, there is a decreasing trend in burglary crimes for all New England states in this time period. Once again, Maine fits this overall trend.
+
+[Burglary Crimes in New England](burglary.gif)
+
 
 ### Measuring the Effectiveness of Parole
 
@@ -145,85 +78,47 @@ After realizing the discrepancies in the Vera data set, our team collected infor
 
 The data collected has been compiled into two separate interactive national maps that portray the information on a county and state level. The state map shows the number of adults on parole per one hundred thousand adult residents. This information is useful in showing which states have the most wide reaching parole and which states, like Maine, have not parole in recent years. It is worth noting that while Maine has had no parole recently, there are still a few individuals who were eligible for parole due to their sentences coming before parole was removed. The county level map displays the ratio of the jail population to the total population per one thousand residents. This normalizes the differences in population size and starts to look at which regions have higher and longer rates of incarcerations. Both of these maps will aid in further understanding the state of Maine prison reform compared to the rest of the US.
 
-```{r}
-incar <- read.csv("incarceration_trends.csv")
-#Importing state/County JSON containing fip and geometry of the counties
-all_counties <- geojsonio:: geojson_read(x= "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json", what= "sp")
-#AK<-geojsonio::geojson_read(x = "https://raw.githubusercontent.com/billcccheng/us-county-boundary-api/master/states/AK.json", what = "sp")
-by_year<-incar$year
-maine_data <- by_year =="1970"
-year_1970 <- incar[maine_data,]
-```
-
-
-
-
-```{r}
-
-year_1970<- year_1970 %>%
-  mutate(county_name = str_to_lower(str_replace_all(county_name, pattern = " County", replacement = "")))
-
-all_counties <- st_as_sf(all_counties)
-all_counties <- all_counties %>%
-  mutate(NAME = str_to_lower(NAME))
-
-joint_info_map <- year_1970 %>%
-  left_join(all_counties, by = c("county_name" = "NAME")) %>%
-  st_as_sf()
-
-
-joint_info_map  <- joint_info_map  %>%
-  #filter(total_pop) %>%
-  mutate(total_pop = total_pop)
-#this is for changing color 
-bins <- c(0, 0.5,1,2,4,15)
-pal <- colorBin("Blues", domain = joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000), bins = bins)
-```
-
-```{r}
-labels <- sprintf("<strong>%s</strong><br/>%g Total Jail Pop/Total Pop",
-                 joint_info_map$county_name, joint_info_map$total_jail_pop/(joint_info_map$total_pop/1000)) %>% lapply(htmltools::HTML)
-```
-
-```{r}
-joint_info_map%>%
-leaflet() %>%
-  addTiles()%>%
-  setView(lng = -80,
-          lat = 34.5,
-          zoom = 4) %>%
-  addPolygons(fillColor = ~pal(total_jail_pop/(total_pop/1000)),
-              fillOpacity = 1,
-              color = "black",
-              opacity = 1,
-              weight = 0.5,
-              highlight = highlightOptions(
-                weight = 3,
-                color = "blue",
-                fillOpacity = .2,
-                bringToFront = TRUE),
-              label = labels) %>%
-  addLegend(
-    position = "topright",
-    pal = pal,
-    values = ~total_jail_pop/(total_pop/1000),
-    title = "Ratio of Jail Pop per 1000",
-    opacity = 1)
-```
-
 ## Recommendations for Next Steps
 There is a lot of work still to be done with this research. Using the national maps alongside the Maine specific visualizations, it is important to identify which states have a similar make up of prison systems and how those states have dealt with parole. This is in service of understanding how reintroducing parole in Maine will impact the system and how many people may be eligible. This is a roundabout way of reaching these conclusions due to the lack of reliable information.
 
 ### Data Collection 
 This leads to the next recommendation which would be to lobby for more thorough data collection and reporting which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
 
-<<<<<<< HEAD
 ### Model Effect of Reinstatement of Parole in Maine
 With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
-=======
-### Model Effect of Parole Reinstatement in Maine
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## References Cited
+Bureau of Justice Statistics
 
-## Appendices
+Probation and Parole Populations:
+https://bjs.ojp.gov/press-release/probation-and-parole-populations-1996
+
+Recidivism of Prisoners Released in 24 States in 2008: A 10-Year Follow-Up Period (2008–2018):
+https://bjs.ojp.gov/library/publications/recidivism-prisoners-released-24-states-2008-10-year-follow-period-2008-2018
+
+National Corrections Reporting Program:
+https://www.bjs.gov/index.cfm?ty=dcdetail&iid=268
+
+Vera Institute of Justice 
+
+Incarceration trends:
+https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-01-22
+The Price of Prisons
+https://www.vera.org/publications/price-of-prisons-2015-state-spending-trends#prisonPopulationAndSpending20102015
+
+
+
+Urban Institute
+
+The Causes and Consequences of Rising Time Served in America’s Prisons:
+https://apps.urban.org/features/long-prison-terms/data.html
+The Causes and Consequences of Rising Time Served in America’s Prisons
+https://apps.urban.org/features/long-prison-terms/trends.html
+
+
+Articles
+
+Maine lawmakers to review restoring parole in state prison system
+https://www.wmtw.com/article/parole-in-maine/39765482#
+
+Lawmaker pushes to restore parole to Maine’s justice system https://www.themainemonitor.org/lawmaker-pushes-to-restore-parole-to-maines-justice-system/
