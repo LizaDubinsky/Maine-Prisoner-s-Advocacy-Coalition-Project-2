@@ -46,6 +46,9 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 
 ## Methodological Approach
 
+To investigate how prison sentences inform the effectiveness of parole, we compared the lengths of prison sentences in states with parole versus without, hoping that states without parole would have longer sentences. We pulled the data from the Urban Institute, which called their data from the National Corrections Reporting Program; the dataset contained the average time served in each state from 1970-2014 for all, violent and nonviolent offenses. We then created line graphs of the time served for these different variables and for the top 10% and bottom 90% of the prison population. 
+
+
 ### Depth and Accessibility of Data
 
 ### Our Approach
