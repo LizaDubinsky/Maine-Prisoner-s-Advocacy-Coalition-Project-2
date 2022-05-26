@@ -89,9 +89,9 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ## Methodological Approach
 
 ### Depth and Accessibility of Data
-
+Access to data was a 
 ### Our Approach
-After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
+After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. Namely these sources were the Vera Institute, the Urban Institute and the Department of Justice Statistics.  This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
 
 
 ## Results and Discussion
@@ -194,9 +194,10 @@ leaflet() %>%
 There is a lot of work still to be done with this research. Using the national maps alongside the Maine specific visualizations, it is important to identify which states have a similar make up of prison systems and how those states have dealt with parole. This is in service of understanding how reintroducing parole in Maine will impact the system and how many people may be eligible. This is a roundabout way of reaching these conclusions due to the lack of reliable information.
 
 ### Data Collection 
-This leads to the next recommendation which would be to lobby for more thorough data collection which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
+This leads to the next recommendation which would be to lobby for more thorough data collection and reporting which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
 
 ### Model Effect of Reinstatement of Parole in Maine
+With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
 
 ## References Cited
 
