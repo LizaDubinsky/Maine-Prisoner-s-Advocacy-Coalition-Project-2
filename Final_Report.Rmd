@@ -89,6 +89,7 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ## Methodological Approach
 
 ### Depth and Accessibility of Data
+
 Access to data was a consistent struggle in conducting our research as there is a lack of consistent or reliable reporting. The Vera Institute's data reported county statistics but lacked data from many counties. The visualization below depicts the lack of data in the Vera Institutes data set. 
 
 -----------INCLUDE LIZA'S GRAPHS--------------
