@@ -89,9 +89,12 @@ We hope that this report will complement the work of the Maine Prisoner Advocacy
 ## Methodological Approach
 
 ### Depth and Accessibility of Data
-Access to data was a 
+Access to data was a consistent struggle in conducting our research as there is a lack of consistent or reliable reporting. The Vera Institute's data reported county statistics but lacked data from many counties. The visualization below depicts the lack of data in the Vera Institutes data set. 
+
+-----------INCLUDE LIZA'S GRAPHS--------------
+
 ### Our Approach
-After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. Namely these sources were the Vera Institute, the Urban Institute and the Department of Justice Statistics.  This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
+After realizing the discrepancies in the Vera data set, our team collected information from multiple sources. Namely these additional sources were the the Urban Institute and the Department of Justice Statistics.  This information was tied together in two different data sets; a set that looks at prison statistics on a county level and a set on the state level. Our data knit together information from the Vera Institute, Urban Institute and the Bureau of Justice Statistics. This data was then utilized to understand the current state of the prison system in Maine and to build two interactive maps of the United States for further research. Through these visualizations of data our team aimed to aid in the understanding of how Maine will be impacted by the reimplementation of parole. 
 
 
 ## Results and Discussion
