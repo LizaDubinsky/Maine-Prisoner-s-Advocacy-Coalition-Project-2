@@ -15,19 +15,19 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-<<<<<<< HEAD
+
 
 ```{r}
-#install.packages("xaringanthemer")
+install.packages("xaringanthemer")
 library(tidyverse)
 library(tidymodels)
 #library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
-#install.packages("maps")
-#install.packages("corrplot")
+install.packages("maps")
+install.packages("corrplot")
 
-=======
+```
   
 ```{r}
 library(dplyr)
@@ -36,17 +36,13 @@ library(tidyverse)
 library(tidymodels)
 library(knitr)
 library(xaringanthemer)
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 library(maps)
 library(ggplot2)
 library(tidyverse)
 library(corrplot)
-<<<<<<< HEAD
 
 library(dplyr)
 #library(dsbox)
-=======
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 library(skimr)
 library(robotstxt)
 library(tidyr) 
@@ -56,7 +52,6 @@ library(RColorBrewer) ## For colour palettes
 library(htmltools) ## For html
 library(leafsync) ## For placing plots side by side
 library(kableExtra) ## Table output
-<<<<<<< HEAD
 #install.packages("geojsonio")
 #install.packages("rgdal")
 #install.packages("leaflet")
@@ -69,8 +64,7 @@ library(leaflet)
 library(RColorBrewer)
 ```
 
-
-=======
+```{r}
 library(geojsonio)
 library(readr)
 library(utils)
@@ -88,7 +82,6 @@ library(parsnip)
 library(rsample)
 
 ```
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## Executive Summary
 
@@ -225,12 +218,10 @@ There is a lot of work still to be done with this research. Using the national m
 ### Data Collection 
 This leads to the next recommendation which would be to lobby for more thorough data collection and reporting which focuses on parole eligibility, recidivism and costs related to parole. Without these more direct data points collected on an individual basis, any understanding of the impacts of the proposed Maine parole system will be loose approximations. There are obvious concerns with data privacy regarding and individual's data but HIPA is generally satisfied if the data is anonymous.  Through more research and effective data collection/transparency, MPAC will be able to build a strong story of how parole will look in Maine. 
 
-<<<<<<< HEAD
 ### Model Effect of Reinstatement of Parole in Maine
 With more consistent data collection and reporting MPAC or other groups will be able to model how many individuals will be eligible for parole under new laws. The significance of this cannot be understated as it gives a clear idea of the impacts to the prison/jail capacity in Maine. If parole applications and outcomes are collected as data, it also becomes possible to make a predictive model to make an educated guess at whom the system favors for parole. 
 =======
 ### Model Effect of Parole Reinstatement in Maine
->>>>>>> f09660cd227f5453cc00ee3178ddfcf36f2c914d
 
 ## References Cited
 
