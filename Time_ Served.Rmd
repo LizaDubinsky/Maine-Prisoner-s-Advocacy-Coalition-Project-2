@@ -4,6 +4,16 @@ output: html_document
 date: '2022-05-16'
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
 ###Time Served
 
 
@@ -41,15 +51,35 @@ Time_served_df_plot <- Time_served_df %>%
   select(!4:8) %>%
   group_by(YEAR) %>%
   arrange(desc(YEAR))
+    
 
+#Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)` = round(Time_served_df$`MEAN TIME SERVED (ALL OFFENSES)`, 2)) #across to do it to multiple, ask laurie if you can specifiy digits in across rfunction, wasn't able to 
+
+
+
+#needed packages to create the plot
+devtools::install_github("hrbrmstr/streamgraph")
 devtools::install_github("hrbrmstr/hrbrthemes")
 install.packages("viridis")
 library(viridis)
 library(hrbrthemes)
 #library(gcookbook)
 library(tidyverse)
+# current verison should be 0.6.0 or higher
+packageVersion("hrbrthemes")
+library(streamgraph)
 
 colnames(Time_served_df_plot) <- c("State", "Year", "Avg_Time_Served_all", "Parole")
+
+#pp <- streamgraph(Time_served_df_plot, key = Time_served_df_plot$State, value = #Time_served_df_plot$`Avg Time Served (all)`, date = Time_served_df_plot$Year, height="300px", width="1000px")
+ # sg_legend(show=TRUE, label="STATE")
+
+##ask laurie why isn't this code working?? 
+
+#pp <- streamgraph(Time_served_df,Time_served_df[,1], Time_served_df[,3],Time_served_df[,2], height="300px", width="1000px")
+#Error in .subset(x, j) : invalid subscript type 'list'
+
+
 
 ```
 
@@ -71,8 +101,19 @@ library(showtext)
 font_add_google("Lato")
 showtext_auto()
 
+#highlight <- list()
+
+#Time_served_df_plot %>%
+#  while (i <= length(Time_served_df_plot)) {
+ #    if (Parole == "Yes") {
+  #    highlight[i] <- Time_served_df_plot[i,1]
+   #   i + 1
+    #}
+  #}
+
+
+
 Time_served_df_plot <- Time_served_df_plot[1:576,]
-colnames(Time_Served_Trends) <- c("State", "Year","Avg_Time_Served_all","Avg_Time_Served_v","Avg_Time_Served_nv","time_served_90_percentile","Avg_Time_Served_Bottom_90_perc","Avg_Time_Served_Top_10_perc")
 
 
 Time_Served_Trends[2:577,] %>%
@@ -92,11 +133,14 @@ Time_Served_Trends[2:577,] %>%
       #panel.grid = element_blank()
     #) +
    labs(y= "The Average Time Served For All Offenses (Years)", title = "The Average Time Served For All Offenses In Each State") +
-    facet_wrap(~State) + xlim(1993, 2014) + ylim(0, 8)
+    facet_wrap(~State)
 
-```
+#can include when exaclty these states decided to abolish parole and label it on the plot
 
-``` {r}
+#can create a ribbon plot , to include data about bottom 90th percentile and top 10th percentile
+
+colnames(Time_Served_Trends) <- c("State", "Year","Avg_Time_Served_all","Avg_Time_Served_v","Avg_Time_Served_nv","time_served_90_percentile","Avg_Time_Served_Bottom_90_perc","Avg_Time_Served_Top_10_perc") 
+
 
 Time_served_All_States <- Time_Served_Trends[2:577,] %>%
   mutate(Parole = case_when(State %in% stateswop ~ "No",
@@ -118,30 +162,45 @@ Time_served_All_States %>%
     geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12) +
   geom_line(aes(x= Year, y = Average_Sentence_Length, color = Parole)) + 
   facet_wrap(~Sentence_Type, labeller = labeller(Sentence_Type = Sentence_Type.labs)) +
-  labs(y= "The Average Time Served For Different Offenses (Years)", title = "The Average Time Served For Different Types of Offenses In All States") + xlim(1989, 2014) + ylim(0, 6.5)
+  labs(y= "The Average Time Served For Different Offenses (Years)", title = "The Average Time Served For Different Types of Offenses In All States")
 
 
 
+
+"Time_served_All_States %>%
+  ggplot(aes(x= Year, y = mean_all, color = Parole)) +
+  geom_line() +
+    geom_text(aes(label=ifelse(Year == 2000 & Parole == No,Wisconsin abolished parole in 2000(the last state to do so),'')), size = 3,hjust= inward,vjust=inward) +
+   geom_ribbon(data=df1,aes(x = Year,ymin= mean_bottom_90, ymax=mean_top_10,fill = Parole), inherit.aes = FALSE, alpha =0.4) +
+  geom_ribbon(data=df2,aes(x =Year,ymin= mean_bottom_90, ymax=mean_top_10, fill = Parole), inherit.aes = FALSE, alpha = 0.4)"
+  
+
+ 
+ 
+    #scale_colour_manual("",values="blue")
+    #scale_fill_manual("",values="grey12")
 ```
 
 
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 ```{r}
 
 Time_served_All_States %>%
   pivot_longer(cols = c("mean_all", "mean_v", "mean_nv"), names_to = "Sentence_Type", values_to = "Average_Sentence_Length") %>%
   ggplot() + 
   geom_line(aes(x= Year, y = mean_top_10, color = Parole)) + 
-  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Top 10% of the Prison Pop. in All States") + xlim(1989, 2014) + ylim(0, 22.5)
+  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Top 10% of the Prison Pop. in All States") 
+    #geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12)
+
 
 
 Time_served_All_States %>%
   pivot_longer(cols = c("mean_all", "mean_v", "mean_nv"), names_to = "Sentence_Type", values_to = "Average_Sentence_Length") %>%
   ggplot() + 
   geom_line(aes(x= Year, y = mean_bottom_90, color = Parole)) +
-  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Bottom 90% of the Prison Pop. in All States") + xlim(1989, 2014) + ylim(0, 2.8)
+  labs(y= "The Average Time Served (Years)", title = "The Average Time Served by the Bottom 90% of the Prison Pop. in All States") 
+    #geom_label_repel(aes(label=ifelse(Year == 2000 & Parole == "No","Wisconsin abolished parole",'')), size = 2, vjust = 0, nudge_y = 1.25, max.overlaps = 12)
   
 
 ```
-
-
 
